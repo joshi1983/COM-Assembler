@@ -1,0 +1,380 @@
+// this file is loaded by the assembler to get information on converting assembly instructions
+// 8086 assembly / machine code translation
+
+// This is not a complete instruction set so if you can help complete it, it would be a great help.
+#colour FFFFFFh // used if and when the opcode list is outputted to html to help separate these instructions from the rest
+
+
+#include <FPU instruction set.txt>
+
+#symbols
+
+// Binary |	register	 
+
+// 16 bit registers
+000		ax
+001		cx
+010		dx
+011		bx
+100		sp
+101		bp
+110		si
+111		di
+
+// _reg16, some instructions refer to a 16 bit register with a 2 bit value excluding the registers (sp, bp, si, di)
+00		_ax
+01		_cx
+10		_dx
+11		_bx
+// These refer to ax, bx, cx, dx but just use 2 bit values instead.  These are used in some opcodes like xchg _reg16, _reg16
+
+// 8 bit registers
+000		al
+001		cl
+010		dl
+011		bl
+100		ah
+101		ch
+110		dh
+111		bh
+
+// segment registers
+00111		es
+01111		cs
+10111		ss
+11111		ds
+
+
+#defines
+
+reg8 = al, bl, cl, dl, ah, bh, ch, dh
+reg16 = ax, bx, cx, dx, sp, bp, si, di
+_reg16 = _ax, _bx, _cx, _dx  
+seg = es, cs, ss, ds 
+
+// i8 and i16 are defined in the assembler program
+// mem8 and mem16 are undefined at present
+
+// i8 -> 8 bit immediate value
+// i16 -> 16 bit immediate value
+// for i16, the bytes need to be swapped.  This is automatically done by the assembler.
+// reg8 -> 8 bit register
+// reg16 -> 16 bit register
+
+// mem -> general memory reference
+// mem8 -> address to an 8 bit variable
+// mem16 -> address to a 16 bit variable
+// memf -> address to a float variable
+// All memory references are programmed into the assembler.  They all use 19 bits.  first 3 determine the addressing mode and the rest is an offset.
+
+
+#opcode // indicate beginning of opcode definitions
+
+// Binary |		opcode | 	operands |	machine code size
+
+000			pop		seg		// 1 byte
+0000001011		add		reg8, reg8	// 2 bytes
+0000001111		add		reg16, reg16	// 2 bytes
+
+0000101000000		or		reg8, mem8	// 4 bytes
+0000101011		or		reg8, reg8	// 2 bytes
+0000101111		or		reg16, reg16	// 2 bytes
+
+0000111100001011	ud2				// 2 bytes (undefined instruction) from Intel specs
+
+000011110000000011011	ltr		reg8		// Load Task Register
+
+000011110000000011100	verr		reg8		// VERR - Verify a Segment for Reading
+000011110000000011101	verw		reg16		// 3 bytes (verify a segment for writing) from Intel specs(didn't specify register size but I assume 16-bit)
+000011110000000111110	lmsw		reg8		// Load Machine Status World
+
+000011110000001011	lar		reg8, reg8	// Load Access Rights Byte
+
+
+0000111100001001	wbinvd				// 2 bytes (writeback and Invalidate Data Cache) from Intel specs
+0000111100011000	wrmsr				// 2 bytes (write to Model-Specific Register) from Intel specs
+
+0000111100110010	rdmsr				// RDMSR - Read from Model-Specific Register
+0000111100110011	rdpmc				// RDPMC - Read Performance Monitoring Counters
+0000111100110001	rdtsc				// RDTSC 0 Real Time-Stamp Counter
+0000111110101010	rsm				// RSM - Resume from System Management Mode
+
+000011111100000011	xadd		reg8,reg8	// XADD - Exchange and Add
+000011111100000111	xadd		reg16,reg16
+
+0001100011		sbb		reg8,reg8	//// SBB - Integer Subtraction with Borrow
+0001100111		sbb		reg16,reg16
+00011100		sbb		"al",i8
+00011101		sbb		"ax",i16
+
+0010000111		and		reg8, reg8	// 2 bytes, from intel specs
+0010001111		and		reg16, reg16	// 2 bytes, from intel specs
+
+0010100011		sub		reg8,reg8
+0010100111		sub		reg16,reg16
+00101100		sub		i8
+00101101		sub		i16
+
+0011000011		xor		reg8, reg8	// 2 bytes
+
+0011000111		xor		reg16, reg16	// 2 bytes
+
+00110101		xor		"ax", i16	// 3 bytes
+00110100		xor		"al", i8	// 2 bytes
+
+00110111		aaa				// 1 byte
+// 00111100 ib		cmp 		"al", i8	// 3 bytes
+// 00111101 iw		cmp 		"ax", i16	// 4 bytes
+
+
+00111111		aas				// 1 byte
+
+01000			inc		reg16		// 1 byte
+01001			dec		reg16		// 1 byte
+01011			pop		reg16		// 1 byte
+01100000		pusha				// 1 byte
+01100001		popa				// 1 byte
+0110011011001011	retfd				// 2 bytes
+01101000		push		i16		// 3 bytes
+01101010		push		i8		// 2 bytes
+01101110		outsb				// 1 byte
+01101111		outsw				// 1 byte
+
+01110000		jo		i8		// 2 bytes
+01110001		jno		i8		// 2 bytes
+
+01110010		jb		i8		// 2 bytes
+01110010		jc		i8		// 2 bytes
+01110010		jnae		i8		// 2 bytes
+
+// 0x72
+01110011		jnb		i8		// 2 bytes
+01110011		jnc		i8		// 2 bytes
+01110011		jae		i8		// 2 bytes, jae, jnc, jnb are the same
+01110100		je		i8		// 2 bytes
+01110100		jz		i8		// 2 bytes, same as je
+01110101		jnz		i8		// 2 bytes
+01110101		jne		i8		// 2 bytes
+01110110		jna		i8		// 2 bytes
+01110111		ja		i8		// 2 bytes
+01110111		jnbe		i8		// 2 bytes, same as ja
+01111001		jns		i8		// 2 bytes
+01111000		js		i8		// 2 bytes
+01111010		jp		i8		// 2 bytes
+01111011		jnp		i8		// 2 bytes
+01111011		jpo		i8		// 2 bytes, same as jnp
+// 0x7B
+
+01111100		jl		i8		// 2 bytes
+01111100		jnge		i8		// 2 bytes
+01111101		jnl		i8		// 2 bytes
+01111110		jng		i8		// 2 bytes
+01111110		jle		i8		// 2 bytes
+01111111		jg		i8		// 2 bytes
+
+1000000000001		or		mem8, i8	// 5 bytes
+1000000011000		add		reg8, i8	// 3 bytes
+1000000011001		or		reg8, i8	// 3 bytes
+
+1000000111001		or		reg16, i16	// 4 bytes
+//1000100010		mov		mem8, reg8	// 4 bytes, machine code for the operands is reversed.
+
+1000001111000		add		reg16, i8	// 3 bytes
+
+1000010011		test		reg8,reg8	// TEST - Logical Compare
+1000010111		test		reg16,reg16
+
+1000101010		mov		reg8, mem8	// 4 bytes
+1000101011		mov		reg8, reg8	// 2 bytes
+1000101111		mov		reg16, reg16	// 2 bytes
+10010000		nop				// 1 byte, same machine code as xchg ax, ax but since exchanging values with itself doesn't do anything, nop and xchg ax,ax are the same.
+//10010			xchg		"ax/eax", _reg	// 1 byte, Exchange Register with Register
+1000011011		xchg		reg8, reg8	// 2 bytes
+1000110110		lea		reg16, mem	// 4 bytes
+
+10011011		wait				// 1 byte, wait from Intel specs
+10011100		pushf				// 1 byte
+10011101		popf				// 1 byte
+10011101		sahf				// 1 byte, same as popf
+10011111		lahf				// 1 byte
+10100100		movsb				// 1 byte
+10100101		movsw				// 1 byte
+10100110		cmpsb				// 1 byte
+10100111		cmpsw				// 1 byte
+
+10101000		test		"al", i8		// 2 bytes
+10101001		test		"ax", i16		// 3 bytes
+
+10101010		stosb				// 1 byte
+10101011		stosw				// 1 byte
+10101100		lodsb				// 1 byte
+10101110		scasb				// 1 byte
+10101111		scasw				// 1 byte
+
+10111			mov		reg16, i16	// 3 bytes
+10110			mov		reg8, i8	// 2 bytes
+// 10111			mov		"ax", i16	// 3 bytes
+
+11000010		ret i16				// 3 bytes, near return to calling procedure and pop i16 bytes from the stack
+
+11000011		ret				// 1 byte near return to calling procedure
+
+1100010000000		les		reg16, mem	// 4 bytes
+1100010100000		lds		reg16, mem	// 4 bytes
+11001001		leave				// LEAVE - High Level Procedure Access
+
+11001010		ret		i16		// 3 bytes, far return to calling procedure and pop i16 bytes off the stack
+11001011		ret				// 1 byte far return to calling procedure
+
+11001100		int3				// 1 byte, interupt 3 trap to debugger 
+
+11001101		int		i8		// 2 bytes
+11001110		into				// 1 byte
+11001111		iret				// 1 byte
+
+1101000011000		rol		reg8		// Rotate Left
+1101000011001		ror		reg8		// Rotate Right
+1101000011010		rcl		reg8		// RCL - Rotate thru Carry Left
+1101000011011		rcr		reg8		// RCR - Rotate thru Carry Right
+1101000011111		sar		reg8		//  SAR - Shift Arithmetic Right
+
+1101000111000		rol		reg16		// Rotate Left
+1101000111001		ror		reg16		// Rotate Right
+1101000111010		rcl		reg16
+1101000111011		rcr		reg16
+1101000111111		sar		reg16		// Shift Arithmetic Right
+
+1101010000001010	aam				// 2 byte
+1101010100001010	aad				// 2 byte
+
+11010111		xlat				// 1 byte
+
+11100000		loopnz		i8		// 2 bytes
+11100000		loopne		i8		// 2 bytes
+11100001		loope		i8		// 2 bytes
+11100001		loopz		i8		// 2 bytes
+11100010		loop		i8		// 2 bytes
+11100011		jcxz		i8		// 2 bytes
+
+11100100		in		"al", i8	// 2 bytes
+11100101		in		"ax", i8	// 2 bytes
+
+11100110		out		i8
+11100111		out		i16
+
+//11101			shr		reg16,i8	// 2 bytes
+11101000		call		i8		// 2 bytes
+
+11101001		jmp		i16		// 3 bytes
+11101011		jmp		i8		// 2 bytes
+11100110		out		i8, "al"	// 2 byte output byte in al to 1/0 port address i8
+11100111		out		i8, "ax"	// 2 byte output word in ax to 1/0 port address i8
+
+11101100		in 		"al", "dx"
+11101101		in 		"ax", "dx"
+
+11101110		out		"dx", "al"	// 1 byte output byte in al to 1/0 port address DX
+11101111		out		"dx", "ax"	// 1 byte output word in ax to 1/0 port address DX
+
+11110000		lock				// LOCK - Assert LOCK# Signal Prefix
+
+11110010		repne				// 1 byte	
+11110010		repnz				// 1 byte	
+11110011		rep				// 1 byte	
+11110011		repe				// 1 byte	
+11110011		repz				// 1 byte	
+
+11110100		hlt				// 1 byte
+1111011011010		not		reg8		// 2 byte
+1111011011011		neg		reg8		// 2 bytes
+1111011011000		test		reg8,i8
+
+1111011011101		imul		reg8		// 2 bytes
+
+1111011111000		test		reg16,i16
+1111011111101		imul		reg16		// 2 bytes
+
+1111011111011		neg		reg16		// 2 bytes
+11111000		clc				// 1 byte
+11111001		stc				// 1 byte
+11111010		cli				// 1 byte
+11111011		sti				// 1 byte
+11111100		cld				// 1 byte
+11111101		std				// 1 byte
+
+1111111011000		inc		reg8		// 2 bytes
+1111111011001		dec		reg8		// 2 bytes
+1111111100000		inc		mem8		// 4 bytes
+1111111111000		inc		reg16		// 2 bytes
+1111111111100		jmp		reg8		// 2 bytes
+
+#examples: // indicate that the following information is ignored by the assembler
+// this section is to help you understand how the process works.
+
+
+// Binary-Hex |				assembly
+
+10111+000 + 00010011 00000000 		mov	ax,13h
+0xB81300
+
+10110+100 + 00010011	 		mov	al,13h
+0xB813
+
+11001101 + 00010000			int 	10h
+0xCD10
+
+01101000 + 00000000 1010000 		push 	A000h
+0x6800A0
+
+11101011 + 11101111			jmp -10h
+0xEBEF
+
+10111+010 + 11001000 00000011		mov dx,03C8h
+0xBAC803
+
+01011+000				pop ax
+0x58
+
+000+00111				pop es
+0x07
+
+000+10111				pop ss
+0x17
+
+000+11111				pop ds
+0x1F
+
+// here is some stuff that is not completely understood
+
+00110100		xor		al, i8		// 2 bytes
+00111100		cmp		al, i8		// 2 bytes
+00111101		cmp		ax, i16		// 3 bytes
+
+0100000000011110	cmp		ah, i8		// 3 bytes
+
+xor al,1 ; 34 01
+xor cl,1 ; 80 F1 01
+xor ah,1 ; 80 F4 01
+xor ch,1 ; 80 F5 01
+
+xor ax,1 ; 35 01 00
+cmp ax,ax ; 3B C0
+cmp ax,bx ; 3B C3
+cmp cx,1 ; 83 F9 01
+
+
+lar	cx,dx			; 0F02h
+
+push es ; 06
+
+	mov	bx,si			; 83F3h
+	mov	bx,di			; 89FBh
+	mov	dx,cs			; 8CCAh
+
+	mov	es,ax			; 8EC0h
+	mov	es,di			; 8EC7h
+	mov	ds,di			; 8EDFh
+	mov	fs,di			; 8EE7h
+
+
+0000001111001000

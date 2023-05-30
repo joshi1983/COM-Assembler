@@ -1,0 +1,926 @@
+// this file is loaded by the assembler to get information on converting assembly instructions
+// 8086 assembly / machine code translation
+// This data compilation is copyrighted by the developer of the assembler, Josh G.  All rights are reserved.
+
+// As far as I know, this is complete.
+
+#colour FFFFFFh // used if and when the opcode list is outputted to html to help separate these instructions from the rest
+
+#symbols
+
+// Binary |	register	 
+
+// 16 bit registers
+000		ax
+001		cx
+010		dx
+011		bx
+100		sp
+101		bp
+110		si
+111		di
+
+// _reg16, some instructions refer to a 16 bit register with a 2 bit value excluding the registers (sp, bp, si, di)
+00		_ax
+01		_cx
+10		_dx
+11		_bx
+// These refer to ax, bx, cx, dx but just use 2 bit values instead.  These are used in some opcodes like xchg _reg16, _reg16
+
+// 8 bit registers
+000		al
+001		cl
+010		dl
+011		bl
+100		ah
+101		ch
+110		dh
+111		bh
+
+// segment registers
+00		_es
+01		_cs
+10		_ss
+11		_ds
+
+// segment registers
+000		es
+001		cs
+010		ss
+011		ds
+100		fs
+101		gs
+//110		reserved
+//111		reserved
+
+#defines
+
+reg8 = al, bl, cl, dl, ah, bh, ch, dh
+reg16 = ax, bx, cx, dx, sp, bp, si, di
+_reg16 = _ax, _bx, _cx, _dx  
+sreg3 = es, cs, ss, ds, fs, gs 
+sreg2 = _es,_cs,_ss,_ds
+
+// i8 and i16 are defined in the assembler program
+// mem8 and mem16 are undefined at present
+
+// i8 -> 8 bit immediate value
+// i16 -> 16 bit immediate value
+// for i16, the bytes need to be swapped.  This is automatically done by the assembler.
+// reg8 -> 8 bit register
+// reg16 -> 16 bit register
+
+// mem -> general memory reference
+// mem8 -> address to an 8 bit variable
+// mem16 -> address to a 16 bit variable
+// mem32 -> address to a 32 bit variable
+// mem64 -> address to a 64 bit variable
+// mem80 -> address to a 80 bit variable, used as Extended-Precision Floating-Point variable in FPU instructions
+// mem128 -> address to a 128 bit variable, used in some sse2 instructions
+
+
+
+
+// All memory references are programmed into the assembler.  They all use 19 bits.  first 3 determine the addressing mode and the rest is an offset.
+
+
+#opcode // indicate beginning of opcode definitions
+
+// Binary |		opcode | 	operands |	machine code size
+
+0000000011		add #revmachoperand	reg8,reg8 #diasmonly // add reg1 to reg2
+0000000111		add #revmachoperand	reg16,reg16 #diasmonly // add reg1 to reg2
+0000001011		add		reg8,reg8  // add reg2 to reg1
+0000001111		add		reg16,reg16  // add reg2 to reg1
+
+00000010		add #mode	reg8,mem8
+00000011		add #mode	reg16,mem16
+00000000		add #mode #revmachoperand	reg8,mem8
+00000001		add #mode #revmachoperand	reg16,mem16
+
+00000100		add		"al",i8
+00000101		add		"ax",i16
+
+00000110		push		"es"		// 1 byte
+00000111		pop		"es"		// 1 byte
+
+0000100011		or #revmachoperand reg8,reg8 #diasmonly
+0000100111		or #revmachoperand reg16,reg16 #diasmonly
+0000101011		or reg8,reg8
+0000101111		or reg16,reg16
+00001010		or #mode #revmachoperand	mem8,reg8
+00001011		or #mode #revmachoperand	mem16,reg16
+1000000111001		or reg16,i8
+1000001111001		or reg16,i16
+00001100		or "al",i8
+00001101		or "ax",i16
+10000000		or #mode+001	mem8,i8
+10000001		or #mode+001	mem16,i8
+10000011		or #mode+001	mem16,i16
+
+00001110		push		"cs"		// 1 byte
+
+000011111011111011	movsx	reg8,reg8	// Move with Sign-Extend
+000011111011111111	movsx	reg16,reg16
+0000111110111110	movsx #mode	reg8,mem8
+0000111110111111	movsx #mode	reg16,mem16
+
+000011111011011011	movzx reg8,reg8		// Move with Zero-Extend
+000011111011011111	movzx reg16,reg16	// Move with Zero-Extend
+
+0000111110110110	movzx #mode reg8,mem8	// Move with Zero-Extend
+0000111110110111	movzx #mode reg16,mem16	// Move with Zero-Extend
+
+0000111100000001		sgdt #mode+000	mem	// Store Global Descriptor Table Register
+
+000011110000000111110	lmsw		reg16		// Load Machine Status Word from register
+0000111100000001	lmsw #mode+110	mem16		// Load Machine Status Word from memory
+
+000011110000000011011	ltr		reg8		// Load Task Register
+
+000011110000000011100	verr			reg16		// VERR - Verify a Segment for Reading
+0000111100000000		verr #mode+100	mem16		// VERR - Verify a Segment for Reading
+000011110000000011101	verw			reg16		// VERR - Verify a Segment for Writing
+0000111100000000		verw #mode+101	mem16		// VERR - Verify a Segment for Writing
+
+
+
+000011110000001011	lar		reg16, reg16	// Load Access Rights Byte
+0000111100000010	lar	#mode	reg16, mem16	// Load Access Rights Byte
+0000111100000000	lldt #mode+010	mem16		// Load Local Descriptor Table Register
+000011110000000011010	lldt	reg16		// Load Local Descriptor Table Register
+
+0000111100000001	lgdt #mode+010	mem16		// Load Global Descriptor Table Register
+0000111100000001	invlpg #mode+111	mem // Invalidate TLB Entry
+
+0000111110110100	lfs #mode	reg16, mem	// load pointer to FS
+0000111110110101	lgs #mode	reg16,mem	// Load Pointer to GS
+
+0000111100001001	wbinvd				// 2 bytes (writeback and Invalidate Data Cache) from Intel specs
+
+0000111100001011	ud2				// 2 bytes (undefined instruction) from Intel specs
+0000111100011000	wrmsr				// 2 bytes (write to Model-Specific Register) from Intel specs
+
+0000111100110010	rdmsr				// RDMSR - Read from Model-Specific Register
+0000111100110011	rdpmc				// RDPMC - Read Performance Monitoring Counters
+0000111100110001	rdtsc				// RDTSC 0 Real Time-Stamp Counter
+
+0000111100000000	ltr	#mode+011	mem16 // Load Task Register
+000011110000000011011	ltr		reg16	
+0000111100000001	sidt #mode+001	mem		// Store Interrupt Descriptor Table Register
+
+0000111100000000	sldt #mode+000	mem
+
+
+000011110000001111	lsl		reg16,reg16	// Load Segment Limit
+0000111100000000	lsl #mode	reg16,mem16
+
+//-----------------------------------------
+0000111110000000		jo		i16		#branch
+0000111110000001		jno		i16		#branch
+
+0000111110000010		jb		i16		#branch
+0000111110000010		jc		i16		#branch
+0000111110000010		jnae		i16		#branch
+
+0000111110000011		jnb		i16		#branch
+0000111110000011		jnc		i16		#branch
+0000111110000011		jae		i16		#branch// jae, jnc, jnb are the same
+0000111110000100		je		i16		#branch
+0000111110000100		jz		i16		#branch// same as je
+0000111110000101		jnz		i16		#branch
+0000111110000101		jne		i16		#branch
+0000111110000110		jna		i16		#branch
+0000111110000111		ja		i16		#branch
+0000111110000111		jnbe		i16	#asmonly	#branch// 2 bytes, same as ja
+0000111110001001		jns		i16		#branch// 2 bytes
+0000111110001000		js		i16		#branch// 2 bytes
+0000111110001010		jp		i16		#branch// 2 bytes
+0000111110001011		jnp		i16		#branch// 2 bytes
+0000111110001011		jpo		i16		#branch// 2 bytes, same as jnp
+
+0000111110001100		jl		i16		#branch// 2 bytes
+0000111110001100		jnge		i16	#asmonly	#branch// 2 bytes
+0000111110001101		jnl		i16		#branch// 2 bytes
+0000111110001110		jng		i16		#branch// 2 bytes
+0000111110001110		jle		i16		#branch// 2 bytes
+0000111110001111		jg		i16		#branch// 2 bytes
+
+//---------------------
+000011111001000011000		seto		reg8		// 
+000011111001000111000		setno		reg8		// 
+
+000011111001001011000		setb		reg8		// 
+000011111001001011000		setc		reg8		// 
+000011111001001011000		setnae		reg8		// 
+
+000011111001001111000		setnb		reg8		// 
+000011111001001111000		setnc		reg8		// 
+000011111001001111000		setae		reg8		// setae, setnc, setnb are the same
+000011111001010011000		sete		reg8		// 
+000011111001010011000		setz		reg8		// same as sete
+000011111001010111000		setnz		reg8		// 
+000011111001010111000		setne		reg8		// 
+000011111001011011000		setna		reg8		// 
+000011111001011111000		seta		reg8		// 
+000011111001011111000		setnbe		reg8		// same as seta
+000011111001100111000		setns		reg8		// 
+000011111001100011000		sets		reg8		// 
+000011111001101011000		setp		reg8		// 
+000011111001101111000		setnp		reg8		// 
+000011111001101111000		setpo		reg8		// same as setnp
+
+000011111001110011000		setl		reg8		
+000011111001110011000		setnge		reg8		
+000011111001110111000		setnl		reg8		
+000011111001111011000		setng		reg8		
+000011111001111011000		setle		reg8		
+000011111001111111000		setg		reg8		
+
+//---------------
+
+0000111110010000		seto #mode+000		mem8		// 
+0000111110010001		setno #mode+000		mem8		// 
+
+0000111110010010		setb #mode+000		mem8		// 
+0000111110010010		setc #mode+000		mem8		// 
+0000111110010010		setnae #mode+000		mem8		// 
+
+0000111110010011		setnb #mode+000		mem8		// 
+0000111110010011		setnc #mode+000		mem8		// 
+0000111110010011		setae #mode+000		mem8		// setae, setnc, setnb are the same
+0000111110010100		sete #mode+000		mem8		// 
+0000111110010100		setz #mode+000		mem8		// same as sete
+0000111110010101		setnz #mode+000		mem8		// 
+0000111110010101		setne #mode+000		mem8		// 
+0000111110010110		setna #mode+000		mem8		// 
+0000111110010111		seta #mode+000		mem8		// 
+0000111110010111		setnbe #mode+000		mem8		// same as seta
+0000111110011001		setns #mode+000		mem8		// 
+0000111110011000		sets #mode+000		mem8		// 
+0000111110011010		setp #mode+000		mem8		// 
+0000111110011011		setnp #mode+000		mem8		// 
+0000111110011011		setpo #mode+000		mem8		// same as setnp
+
+0000111110011100		setl #mode+000		mem8		
+0000111110011100		setnge #mode+000		mem8		
+0000111110011101		setnl #mode+000		mem8		
+0000111110011110		setng #mode+000		mem8		
+0000111110011110		setle #mode+000		mem8		
+0000111110011111		setg #mode+000		mem8		
+
+//-----------------
+
+000011111010010011	shld		reg16,reg16,i8	// double precision shift left by i8
+0000111110100100	shld #mode	mem16,reg16,i8 #revmachoperand
+000011111010010111	shld		reg16,reg16,"cl"	
+0000111110100101	shld #mode	mem16,reg16,"cl"	#revmachoperand
+
+000011111010110011	shrd		reg16,reg16,i8	// double precision shift left by i8
+0000111110101100	shrd #mode	mem16,reg16,i8 #revmachoperand
+000011111010110111	shrd		reg16,reg16,"cl"	
+0000111110101101	shrd #mode	mem16,reg16,"cl"	#revmachoperand
+
+
+
+0000111110110010	lss #mode	reg16,mem16
+
+0000111110100000	push		"fs"		// 2 bytes
+0000111110100001	pop		"fs"		// 1 byte
+000011111010001111	bt		reg16,reg16	
+0000111110101000	push		"gs"		// 2 bytes
+0000111110101001	pop		"gs"		// 1 byte
+0000111110101010	rsm				// RSM - Resume from System Management Mode
+
+000011111011000011	cmpxchg		reg8,reg8	// compare and exchange, binary for operands might need to be swapped
+000011111011000111	cmpxchg		reg16,reg16	// compare and exchange, binary for operands might need to be swapped
+0000111110110000	cmpxchg	#mode	mem8,reg8 #revmachoperand
+0000111110110001	cmpxchg	#mode	mem16,reg16 #revmachoperand
+
+000011111011110011	bsf		reg16,reg16	// bit scan forward
+0000111110111100	bsf #mode #revmachoperand 	mem16,reg16	
+
+000011111011110111	bsr		reg16,reg16	// Bit Scan Reverse
+0000111110111101	bsr #mode #revmachoperand  mem16,reg16	// Bit Scan Reverse
+
+0000111110111010	bt #mode+100	mem8,i8		// Bit Test
+000011111011101011100	bt		reg8,i8		// Bit Test, store selected bit in cf flag
+0000111110100011	bt #mode #revmachoperand	mem8,reg8
+
+00001111101110101011111	btc 		reg16,i8 // Bit Test and Complement
+000011111011101010	btc #mode+111	mem16,i8
+000011111011101111	btc #revmachoperand	reg16,reg16
+0000111110111011	btc #mode #revmachoperand	mem16, reg16
+
+000011111011101011110	btr	reg16,i8	// Bit Test and Reset
+0000111110111010	btr #mode+110	mem16,i8
+000011111011001111	btr #revmachoperand	reg16,reg16
+0000111110110011	btr #mode #revmachoperand	mem16,reg16
+
+000011111011101011101	bts		reg16,i8	// Bit Test and Set
+0000111110111010	bts #mode+101	mem16,i8
+000011111011101111	bts	#revmachoperand	reg16,reg16	// Bit Test and Set
+0000111110101011	bts #mode #revmachoperand	mem16,reg16
+0000111111001		bswap		reg16		// Byte Swap
+
+0000111110110010	ltr #mode+011	mem16
+
+
+000011111100000011	xadd		reg8,reg8	// XADD - Exchange and Add
+000011111100000111	xadd		reg16,reg16
+0000111111000000	xadd	#mode	#revmachoperand	mem8,reg8	// XADD - Exchange and Add
+0000111111000001	xadd	#mode	#revmachoperand	mem16,reg16
+
+
+0001000011		adc	#revmachoperand	reg8,reg8	#diasmonly 
+0001001011		adc		reg8,reg8  	// reg2 into reg1
+0001000111		adc	#revmachoperand	reg16,reg16	#diasmonly
+0001001111		adc		reg16,reg16  	// reg2 into reg1
+00010000		adc #mode #revmachoperand	mem8,reg8
+00010001		adc #mode #revmachoperand	mem16,reg16
+00010010		adc #mode 	reg8,mem8
+00010011		adc #mode 	reg16,mem16
+00010100		adc 	"al",i8
+00010101		adc 	"ax",i16
+
+
+00010110		push		"ss"		// 1 byte
+00010111		pop		"ss"		// 1 byte
+
+0001100011		sbb	#revmachoperand	reg8,reg8	#diasmonly//// SBB - Integer Subtraction with Borrow
+0001100111		sbb	#revmachoperand	reg16,reg16 #diasmonly
+0001101011		sbb		reg8,reg8	//// SBB - Integer Subtraction with Borrow
+0001101111		sbb		reg16,reg16 
+00011010		sbb #mode	reg8,mem8
+00011011		sbb #mode	reg16,mem16
+00011010		sbb #mode #revmachoperand	mem8,reg8
+00011011		sbb #mode #revmachoperand	mem16,reg16
+1000000011011		sbb		reg8,i8
+1000000111011		sbb		reg16,i8
+1000001111011		sbb		reg16,i16
+00011100		sbb		"al",i8
+00011101		sbb		"ax",i16
+10000000		sbb #mode+011	mem8,i8
+10000010		sbb #mode+011	mem8,i16 #diasmonly
+10000001		sbb #mode+011	mem16,i8
+10000011		sbb #mode+011	mem16,i16
+
+
+
+
+00011110		push		"ds"		// 1 byte
+00011111		pop		"ds"		// 1 byte
+
+0010000011		and	#revmachoperand	reg8, reg8 #diasmonly	// 2 bytes, from intel specs
+0010000111		and	#revmachoperand	reg16, reg16 #diasmonly	// 2 bytes, from intel specs
+
+00100010		and #mode	reg8,mem8
+00100011		and #mode	reg16,mem16
+
+00100000		and #mode #revmachoperand	mem8,reg8 
+00100001		and #mode #revmachoperand	mem16,reg16 
+
+
+
+0010001011		and		reg8, reg8	// 2 bytes, from intel specs
+0010001111		and		reg16, reg16	// 2 bytes, from intel specs
+00100100		and		"al", i8	// 2 bytes, from intel specs
+00100101		and		"ax", i16	// 3 bytes, from intel specs
+
+
+
+0010100011		sub	#revmachoperand	reg8,reg8 #diasmonly
+0010100111		sub	#revmachoperand	reg16,reg16 #diasmonly
+0010101011		sub		reg8,reg8 
+0010101111		sub		reg16,reg16 
+00101010		sub #mode	reg8,mem8
+00101011		sub #mode	reg16,mem16
+00101000		sub #mode #revmachoperand	mem8,reg8
+00101001		sub #mode #revmachoperand	mem16,reg16
+00101100		sub		"al", i8
+00101101		sub		"ax", i16
+
+
+
+0011000011		xor	#revmachoperand	reg8, reg8	#diasmonly// 2 bytes
+0011000111		xor	#revmachoperand	reg16, reg16	#diasmonly// 2 bytes
+0011001011		xor		reg8, reg8	// 2 bytes
+0011001111		xor		reg16, reg16	// 2 bytes
+00110010		xor #mode	reg8,mem8
+00110011		xor #mode	reg16,mem16
+00110000		xor #mode #revmachoperand	mem8,reg8
+00110001		xor #mode #revmachoperand	mem16,reg16
+1000000011110	xor 		reg8,i8
+1000000111110	xor 		reg16,i8
+1000001011110	xor 		reg8,i16
+1000001111110	xor 		reg16,i16
+00110101		xor		"ax", i16	// 3 bytes
+00110100		xor		"al", i8	// 2 bytes
+10000000		xor #mode+110	mem8,i8
+10000001		xor #mode+110	mem16,i8
+10000010		xor #mode+110	mem8,i16
+10000011		xor #mode+110	mem16,i16
+
+
+00110111		aaa				// 1 byte
+0011100011		cmp		reg8,reg8	// compare register1 with register2
+0011100111		cmp		reg16,reg16	// compare register1 with register2
+0011101011		cmp	#revmachoperand	reg8,reg8	#diasmonly// compare register2 with register1, reverse binary for operands
+0011101111		cmp	#revmachoperand	reg16,reg16	#diasmonly// compare register2 with register1, reverse binary for operands
+00111010		cmp #mode #revmachoperand	mem8,reg8
+00111011		cmp #mode #revmachoperand	mem16,reg16
+
+00111100 		cmp 		"al", i8	// 3 bytes
+00111101		cmp 		"ax", i16	// 4 bytes
+
+
+
+00111111		aas				// 1 byte
+
+01000			inc		reg16		// 1 byte
+01001			dec		reg16		// 1 byte
+11111110		inc #mode+000	mem8
+11111111		inc #mode+000	mem16
+1111111011000		inc 		reg8 
+1111111111000		inc 		reg16#diasmonly
+
+01010			push		reg16		// 1 byte
+1111111111110		push		reg16 #diasmonly
+11111111		push #mode+110	mem16
+
+
+01011			pop		reg16		// 1 byte
+0000111111000		pop		reg16 #diasmonly
+
+01100000		pusha				// 1 byte
+01100001		popa				// 1 byte
+
+0110001111		arpl		reg16,reg16	// Adjust RPL Field of Segment Selector
+01100011		arpl #mode	reg16,mem16
+01100010		bound #mode	reg16,mem16
+
+01101100		insb	// input byte from DX port into byte[es:di]
+01101101		insw	// input word from DX port into word[es:di]
+
+
+000011111010111111	imul		reg8,reg8
+0000111110101111	imul #mode	reg8,mem8
+
+// the following are only commented out because the assembler doesn't support 3 operand instructions, yet
+0110100111		imul		reg8,reg8,i8 // multiply reg1 with immediate value and store in reg2
+0110101111		imul		reg16,reg16,i16 // multiply reg1 with immediate value and store in reg2
+01101001		imul #mode #revMachOperand	mem8,reg8,i8 // the revmachoperand is for the first 2 operands only
+
+
+//---------------------------------------------------------------------
+
+0110011011001011	retfd				// 2 bytes
+01101000		push		i8		// 2 bytes
+01101010		push		i16	#processor=80186	// 3 bytes
+01101110		outsb				// 1 byte
+01101111		outsw				// 1 byte
+
+01110000		jo		i8		#branch// 2 bytes
+01110001		jno		i8		#branch// 2 bytes
+
+01110010		jb		i8		#branch// 2 bytes
+01110010		jc		i8		#branch// 2 bytes
+01110010		jnae		i8		#branch// 2 bytes
+
+// 0x72
+01110011		jnb		i8		#branch// 2 bytes
+01110011		jnc		i8		#branch// 2 bytes
+01110011		jae		i8		#branch// 2 bytes, jae, jnc, jnb are the same
+01110100		je		i8		#branch// 2 bytes
+01110100		jz		i8		#branch// 2 bytes, same as je
+01110101		jnz		i8	#branch	// 2 bytes
+01110101		jne		i8	#branch	// 2 bytes
+01110110		jna		i8	#branch	// 2 bytes
+01110111		ja		i8	#branch	// 2 bytes
+01110111		jnbe		i8	#branch	// 2 bytes, same as ja
+01111001		jns		i8	#branch	// 2 bytes
+01111000		js		i8	#branch	// 2 bytes
+01111010		jp		i8	#branch	// 2 bytes
+01111011		jnp		i8	#branch	// 2 bytes
+01111011		jpo		i8	#branch	// 2 bytes, same as jnp
+// 0x7B
+
+01111100		jl		i8	#branch	// 2 bytes
+01111100		jnge		i8	#branch	// 2 bytes
+01111101		jnl		i8	#branch	// 2 bytes
+01111110		jng		i8	#branch	// 2 bytes
+01111110		jle		i8	#branch	// 2 bytes
+01111111		jg		i8	#branch	// 2 bytes
+
+1000000011101	sub	reg8,i8
+1000000111101	sub	reg16,i8
+1000001011101	sub	reg8,i16 
+1000001111101	sub	reg16,i16
+10000000		sub #mode+101	mem8,i8
+10000001		sub #mode+101	mem16,i8
+10000010		sub #mode+101	mem8,i16
+10000011		sub #mode+101	mem16,i16
+
+10001111		pop #mode+000	mem16
+
+1000000011000		add	reg8,i8
+1000000111000		add	reg16,i8
+1000001111000		add	reg16,i16
+10000000		add #mode+000	mem8,i8
+10000001		add #mode+000	mem16,i8
+10000011		add #mode+000	mem16,i16
+
+1000000011001		or		reg8, i8	// 3 bytes
+
+
+1000000011111		cmp		reg8,i8
+1000000111111		cmp		reg16,i8
+
+1000001111111		cmp		reg16,i16
+10000000		cmp #mode+111	mem8,i8
+10000010		cmp #mode+111	mem8,i16 #diasmonly
+10000001		cmp #mode+111	mem16,i8 
+10000011		cmp #mode+111	mem16,i16
+
+
+
+10000000		adc #mode+010	mem8,i8
+10000001		adc #mode+010	mem16,i8
+10000011		adc #mode+010	mem16,i16
+1000000011010		adc  	reg8,i8
+1000000111010		adc  	reg16,i8
+1000001111010		adc  	reg16,i16
+
+1000000111001		or		reg16, i16	// 4 bytes
+	
+
+1000000111100		and		reg16,i8
+1000001111100		and		reg16,i16
+
+1000000011100		and reg8,i8
+10000000		and #mode+100	mem8,i8
+10000001		and #mode+100	mem16,i8
+10000011		and #mode+100	mem16,i16
+
+1000010011		test	reg8,reg8
+1000010111		test	reg16,reg16
+10000100		test #mode reg8,mem8
+10000101		test #mode reg16,mem16
+11110110		test #mode+000 mem8,i8
+11110111		test #mode+000 mem16,i16
+
+
+10001000		mov	#mode	mem8, reg8	#revmachoperand 
+10001001		mov	#mode	mem16, reg16	#revmachoperand 
+
+10001010		mov	#mode	reg8, mem8	// 4 bytes
+10001011		mov	#mode	reg16, mem16	// 4 bytes
+
+1000101011		mov		reg8, reg8	// 2 bytes
+1000101111		mov		reg16, reg16	// 2 bytes
+10010000		nop				// 1 byte, same machine code as xchg ax, ax but since exchanging values with itself doesn't do anything, nop and xchg ax,ax are the same.
+
+10010			xchg		"ax", reg16	// 1 byte, Exchange Register with Register
+1000011011		xchg		reg8, reg8	// 2 bytes
+1000011111		xchg		reg16, reg16	// 2 bytes
+10000110		xchg #mode	#revmachoperand	mem8, reg8	// 2 bytes
+10000111		xchg #mode	#revmachoperand	mem16, reg16	// 2 bytes
+
+
+10001101		lea	#mode	reg16, mem	// 4 bytes
+
+1000111011		mov		sreg3,reg16
+10001110		mov #mode	sreg3,mem16
+1000110011		mov	#revmachoperand	reg16,sreg3
+10001100		mov #mode #revmachoperand	mem16,sreg3
+
+10011011		wait				// 1 byte, wait from Intel specs
+10011100		pushf				// 1 byte
+10011101		popf				// 1 byte
+10011101		sahf				// 1 byte, same as popf
+10011111		lahf				// 1 byte
+10100100		movsb				// 1 byte
+10100101		movsw				// 1 byte
+10100110		cmpsb				// 1 byte
+10100111		cmpsw				// 1 byte
+
+10101000		test		"al", i8		// 2 bytes
+10101001		test		"ax", i16		// 3 bytes
+
+//10100000		mov		i16,"al"	// this is for a moving a value from a memory address, i16 would be the offset to the data to move
+//10100001		mov		i16,"ax"	// these were commented out because of the possibility that they may be assembled when the user wants to simply move an immediate value into the register instead of a value from memory
+//10100010		mov		"al",i16	// move a byte from the offset in i16 into al
+//10100011		mov		"ax",i16	// move a word from the offset in i16 into ax
+
+10101010		stosb				// 1 byte
+10101011		stosw				// 1 byte
+10101100		lodsb				// 1 byte
+10101110		scasb				// 1 byte
+10101111		scasw				// 1 byte
+
+10111			mov		reg16, i16	// 3 bytes
+10110			mov		reg8, i8	// 2 bytes
+
+11000010		ret i16				// 3 bytes, near return to calling procedure and pop i16 bytes from the stack
+
+11000011		ret				// 1 byte near return to calling procedure
+//11001011		ret // intersegment return
+//11001010		ret i16 // intersegment return
+
+1100000011100		shr		reg8,i8		// shift register right by i8 digits
+1100000111100		shr		reg16,i8		// shift register right by i8 digits
+11000000		shr #mode+101	mem8,i8
+11000001		shr #mode+101	mem16,i8
+
+
+1100011011000		mov		reg8,i8 #diasmonly	// alternate, less efficient code so don't assemble with this.
+1100011111000		mov		reg16,i16 #diasmonly // these do the same as 10111 but with more, seemingly inefficient code
+11000110		mov #mode+000	mem8,i8
+11000111		mov #mode+000	mem16,i16
+11010010		shr #mode+101	mem8,"cl" 
+11010011		shr #mode+101	mem16,"cl" 
+
+11000100		les	#mode	reg16, mem	// load pointer to ES
+11000101		lds	#mode	reg16, mem	// load pointer to DS
+11001001		leave				// LEAVE - High Level Procedure Access
+
+11001010		ret		i16		// 3 bytes, far return to calling procedure and pop i16 bytes off the stack
+; 11001011		ret				// 1 byte far return to calling procedure
+
+11001100		int		"3"		#asmonly// 1 byte, interupt 3 trap to debugger 
+11001100		int3				// 1 byte, interupt 3 trap to debugger 
+
+
+11001101		int		i8		// 2 bytes
+11001110		into				// 1 byte
+11001111		iret				// 1 byte
+
+
+//---------------------------------------
+
+11010000		rcl #mode+010	mem8,"1"  // Rotate Carry Left
+11010001		rcl #mode+010	mem8,"1"  // Rotate Carry Left
+11010010		rcl #mode+010	mem8,"cl"
+11010011		rcl #mode+010	mem16,"cl"
+1100000011010		rcl		reg8,i8
+1100000111010		rcl		reg16,i8
+11000000		rcl #mode+010	mem8,i8
+11000001		rcl #mode+010	mem16,i8
+
+
+11010000		rcr #mode+011	mem8,"1"  // Rotate Carry Right
+11010001		rcr #mode+011	mem8,"1"  // Rotate Carry Right
+11010010		rcr #mode+011	mem8,"cl"
+11010011		rcr #mode+011	mem16,"cl"
+1100000011011		rcr		reg8,i8
+1100000111011		rcr		reg16,i8
+11000000		rcr #mode+011	mem8,i8
+11000001		rcr #mode+011	mem16,i8
+
+
+1101000011000		rol		reg8,"1"		// Rotate Left
+1101000111000		rol		reg16,"1"		// Rotate Left
+11010000		rol #mode+000	mem8,"1"		// Rotate Left
+11010001		rol #mode+000	mem16,"1"		// Rotate Left
+1101001011000		rol 		reg8,"cl"		// Rotate Left
+1101001111000		rol 		reg16,"cl"		// Rotate Left
+11010010		rol #mode+000	mem8,"cl"		// Rotate Left
+11010011		rol #mode+000	mem16,"cl"		// Rotate Left
+1100000011000		rol		reg8,i8
+1100000111000		rol		reg16,i8
+11000000		rol #mode+000	mem8,i8
+11000001		rol #mode+000	mem16,i8
+
+
+1101000011001		ror		reg8,"1"		// Rotate Right
+1101000111001		ror		reg16,"1"		// Rotate Right
+11010000		ror #mode+001	mem8,"1"		// Rotate Right
+11010001		ror #mode+001	mem16,"1"		// Rotate Right
+1101001011001		ror 		reg8,"cl"		// Rotate Right
+1101001111001		ror 		reg16,"cl"		// Rotate Right
+11010010		ror #mode+001	mem8,"cl"		// Rotate Right
+11010011		ror #mode+001	mem16,"cl"		// Rotate Right
+1100000011001		ror		reg8,i8
+1100000111001		ror		reg16,i8
+11000000		ror #mode+001	mem8,i8
+11000001		ror #mode+001	mem16,i8
+
+
+1101000011100		sal		reg8,"1" #asmonly	// Shift Arithmetic Left, same as shl
+1101000111100		sal		reg16,"1" #asmonly	// Shift Arithmetic Left, same as shl
+11010000		sal #mode+100	mem8,"1" #asmonly	// Shift Arithmetic Left, same as shl
+11010001		sal #mode+100	mem16,"1" #asmonly	// Shift Arithmetic Left, same as shl
+1101001011100		sal		reg8,"cl" #asmonly	// Shift Arithmetic Left, same as shl
+1101001111100		sal		reg16,"cl" #asmonly	// Shift Arithmetic Left, same as shl
+11010010		sal #mode+100	mem8,"cl" #asmonly	// Shift Arithmetic Left, same as shl
+11010011		sal #mode+100	mem16,"cl" #asmonly	// Shift Arithmetic Left, same as shl
+1100000011100		sal 		reg8,i8 #asmonly		// Shift Arithmetic Left, same as shl
+1100000111100		sal 		reg16,i8 #asmonly	// Shift Arithmetic Left, same as shl
+11000000		sal #mode+100 	mem8,i8	 #asmonly	// Shift Arithmetic Left, same as shl
+11000001		sal #mode+100 	mem16,i8 #asmonly	// Shift Arithmetic Left, same as shl
+
+
+1101000011100		shl		reg8,"1"
+1101000111100		shl		reg16,"1"
+11010000		shl #mode+100	mem8,"1"
+11010001		shl #mode+100	mem16,"1"
+1101001011100		shl		reg8,"cl"
+1101001111100		shl		reg16,"cl"
+11010010		shl #mode+100	mem8,"cl"
+11010011		shl #mode+100	mem16,"cl"
+1100000011100		shl 		reg8,i8
+1100000111100		shl 		reg16,i8
+11000000		shl #mode+100 	mem8,i8
+11000001		shl #mode+100 	mem16,i8
+
+11010000		sar #mode+111	mem8,"1"
+11010001		sar #mode+111	mem16,"1"
+1101001011111		sar 		reg8,"cl"
+1101001111111		sar 		reg16,"cl"
+11010010		sar #mode+111 	mem8,"cl"
+11010011		sar #mode+111 	mem16,"cl"
+1100000011111		sar		reg8,i8
+1100000111111		sar		reg16,i8
+11000000		sar #mode+111	mem8,i8
+11000001		sar #mode+111	mem16,i8
+
+
+
+//---------------------------------------
+1101000011101		shr		reg8, "1"	// 2 bytes
+
+1101000011111		sar		reg8,"1"		//  SAR - Shift Arithmetic Right
+
+
+1101000111000		rol		reg16		// Rotate Left
+1101000111001		ror		reg16		// Rotate Right
+
+1101000011010		rcl		reg8,"1"
+1101000111010		rcl		reg16,"1"
+1101001011010		rcl		reg8,"cl"
+1101001111010		rcl		reg16,"cl"
+
+1101000011011		rcr		reg8,"1"
+1101000111011		rcr		reg16,"1"
+1101001011011		rcr		reg8,"cl"
+1101001111011		rcr		reg16,"cl"
+
+
+1101000111101		shr		reg16, "1"	
+1101000111111		sar		reg16		// Shift Arithmetic Right
+
+1101001011100		shr		reg8,"cl"	// shift right by cl bits
+
+1101010000001010	aam				// 2 byte
+1101010100001010	aad				// 2 byte
+
+11010111		xlat				// 1 byte
+
+11100000		loopnz		i8		#branch// 2 bytes
+11100000		loopne		i8		#branch// 2 bytes
+11100001		loope		i8		#branch// 2 bytes
+11100001		loopz		i8		#branch// 2 bytes
+11100010		loop		i8		#branch// 2 bytes
+11100011		jcxz		i8		#branch// 2 bytes
+
+// Call procedure in same segment
+11101000		call		i16		// i16 = full displacement in segment
+
+// Call procedure in other segment
+// 10011010		call unsigned full offset, selector
+
+11100100		in		"al", i8	// 2 bytes
+11100101		in		"ax", i8	// 2 bytes
+11100110		out		i8, "al"	// 2 byte output byte in al to 1/0 port address i8
+11100110		out		i8 #asmonly
+11100111		out		i8, "ax"	// 2 byte output word in ax to 1/0 port address i8
+11100111		out		i16
+11101000		call		i8		#branch// 2 bytes
+11101001		jmp		i16		#stopdiasm// 3 bytes, jump with an offset as a parameter
+11101011		jmp		i8		#stopdiasm// 2 bytes, jump with the immediate address as a parameter
+
+
+11101100		in 		"al", "dx"
+11101101		in 		"ax", "dx"
+
+11101110		out		"dx", "al"	// 1 byte output byte in al to 1/0 port address DX
+11101111		out		"dx", "ax"	// 1 byte output word in ax to 1/0 port address DX
+
+11110000		lock		#prefix		// LOCK - Assert LOCK# Signal Prefix
+
+11110010		repne		#Prefix		// 1 byte	
+11110010		repnz		#Prefix		// 1 byte	
+11110011		rep		#Prefix		// 1 byte	
+11110011		repe		#Prefix		// 1 byte	
+11110011		repz		#Prefix		// 1 byte	
+
+11110100		hlt				// 1 byte
+1111011011010		not		reg8		// 2 byte
+1111011111010		not		reg16
+11110110		not #mode+010	mem8
+11110111		not #mode+010	mem16
+
+1111011011011		neg		reg8		// 2 bytes
+
+11110110		neg #mode+011	mem8
+
+
+1111011011000		test		reg8,i8
+
+1111011011110		div		"al",reg8
+1111011011110		div		reg8		// an alternate way of writing the same instruction
+
+1111011111110		div		"ax",reg16
+1111011111110		div		reg16		// an alternate way of writing the same instruction
+
+11110110		div #mode+110	mem8
+11110111		div #mode+110	mem16
+
+1111011011101		imul		reg8	#asmonly	// signed multiply
+1111011011101		imul		"al",reg8 		// signed multiply
+
+
+1111011011111		idiv		"al",reg8	// divide al with register
+1111011011111		idiv		reg8		// divide al with register
+11110110		idiv #mode+111	mem8
+11110111		idiv #mode+111	mem16
+
+1111011011100		mul		"al",reg8
+11110111		neg #mode+011	mem16
+11110110		mul #mode+100	"al",mem8
+11110111		mul #mode+100	"ax",mem16
+
+
+1111011111000		test		reg16,i16
+1111011111100		mul		"ax",reg16
+1111011111101		imul		"ax",reg16 #asmonly		// signed multiply
+1111011111101		imul		reg16		// 2 bytes
+11110110		imul #mode+101	"al",mem8 
+11110111		imul #mode+101	"ax",mem16 
+
+1111011111101		idiv		"ax",reg16	// divide ax with register
+1111011111101		idiv		reg16	// divide ax with register
+
+
+1111011111011		neg		reg16		// 2 bytes
+
+11111000		clc				// 1 byte
+11111001		stc				// 1 byte
+11111010		cli				// 1 byte
+11111011		sti				// 1 byte
+11111100		cld				// 1 byte
+11111101		std				// 1 byte
+
+1111111011001		dec		reg8		// 2 bytes
+1111111111001		dec		reg16#diasmonly
+11111110		dec #mode+001	mem8
+11111111		dec #mode+001	mem16
+11111111		call #mode+010	mem #branch// Call procedure in same segment
+11111111		call #mode+011	mem #diasmonly #branch// Call procedure in other segment
+
+1111111111010		call		reg16 #branch// Call procedure in same segment
+1111111111100		jmp		reg8		#branch #stopdiasm// 2 bytes
+
+#examples: // indicate that the following information is ignored by the assembler
+// this section is to help you understand how the process works.
+
+
+// Binary-Hex |				assembly
+
+10111+000 + 00010011 00000000 		mov	ax,13h
+0xB81300
+
+10110+100 + 00010011	 		mov	al,13h
+0xB813
+
+11001101 + 00010000			int 	10h
+0xCD10
+
+01101000 + 00000000 1010000 		push 	A000h
+0x6800A0
+
+11101011 + 11101111			jmp -10h
+0xEBEF
+
+10111+010 + 11001000 00000011		mov dx,03C8h
+0xBAC803
+
+01011+000				pop ax
+0x58
+
+000+00111				pop es
+0x07
+
+000+10111				pop ss
+0x17
+
+000+11111				pop ds
+0x1F
+
+// segment override prefixes used to change the segment of the memory reference for an instruction
+00100110		esoverride	#prefix     	26h
+00101110		csoverride	#prefix		2Eh
+00110110		ssoverride	#prefix		36h
+00111110		dsoverride	#prefix		3Eh
+01100100		fsoverride	#prefix		64h
+01100101		gsoverride	#prefix		65h

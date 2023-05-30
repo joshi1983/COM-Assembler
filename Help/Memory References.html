@@ -1,0 +1,112 @@
+<html>
+<head>
+<title>Memory Referencing</title>
+</head>
+<body>
+<h1>Memory Referencing</h1>
+<h2>Overview</h2>
+<dd>With memory references, there are several ways to define the address.  To calculate addresses, it can mean adding registers like si, bp,di, bx and an offset together. 
+
+
+<h2>Assembling Memory References</h2>
+<dd>This explanation is mainly for people interested in making an assembler or people editing the instruction set files.
+<dd>Currently, there is a #mode directive to use in instruction set files.  If you use it for an instruction, the memory mode will be defined in the 2 bits just after the opcode's machine code and before the machine code for operands.  There is another part of the memory reference.  All memory references use a 3-bit portion to define how the registers are set up.  Look at the supported expressions list.  That is mode 2 with those 8 different values for those 3 bits.  There are also modes 0,1, and 3.  Modes 0 and 1 use the same registers as mode 2 but with smaller offsets.  Mode 0 uses no offset so the r/m machine code is just 3 bits.  Mode 1 uses 8-bit offsets so the machine code is 3+8 or 11 bits long.  Mode 3 uses the basic 16-bit registers(ax,cx,dx,bx...) and no offset so it is also just 3-bits long.   
+
+
+<h2>Supported expressions</h2> 
+(currently, only assembles to(shown in bold font) mode 2 and mode 0:reg 6 but disassembles all memory references)
+<TABLE Border="1" CellPadding="5">
+<TR><TD>
+<CENTER><STRONG>MODE 0</STRONG></CENTER>
+<ul>
+<li>0: <FONT Color="Navy">BX+SI</FONT>
+<li>1: <FONT Color="Navy">BX+DI</FONT>
+<li>2: <FONT Color="Navy">BP+SI</FONT>
+<li>3: <FONT Color="Navy">BP+DI</FONT>
+<li>4: <FONT Color="Navy">SI</FONT>
+<li>5: <FONT Color="Navy">DI</FONT>
+<li><B>6: Offset16</B>
+<li>7: <FONT Color="Navy">BX</FONT>
+</ul>
+</td><td>
+<CENTER><strong>MODE 1</strong></CENTER>
+<ul>
+<li>0: <FONT Color="Navy">BX+SI</FONT>+offset8
+<li>1: <FONT Color="Navy">BX+DI</FONT>+offset8
+<li>2: <FONT Color="Navy">BP+SI</FONT>+offset8
+<li>3: <FONT Color="Navy">BP+DI</FONT>+offset8
+<li>4: <FONT Color="Navy">SI</FONT>+offset8
+<li>5: <FONT Color="Navy">DI</FONT>+offset8
+<li>6: <FONT Color="Navy">BP</FONT>+offset8
+<li>7: <FONT Color="Navy">BX</FONT>+offset8
+</ul>
+</td><td>
+<CENTER><strong>MODE 2</strong></CENTER>
+<ul>
+<li><B>0: <FONT Color="Navy">BX+SI</FONT>+offset16</B>
+<li><B>1: <FONT Color="Navy">BX+DI</FONT>+offset16</B>
+<li><B>2: <FONT Color="Navy">BP+SI</FONT>+offset16</B>
+<li><B>3: <FONT Color="Navy">BP+DI</FONT>+offset16</B>
+<li><B>4: <FONT Color="Navy">SI</FONT>+offset16</B>
+<li><B>5: <FONT Color="Navy">DI</FONT>+offset16</B>
+<li><B>6: <FONT Color="Navy">BP</FONT>+offset16</B>
+<li><B>7: <FONT Color="Navy">BX</FONT>+offset16</B>
+</ul>
+</td></tr>
+</table>
+<BR>
+<h2>Segment overrides</h2>
+<dd>You can set the segment register by placing it in the left part of the brackets, left of a :.<BR>
+<STRONG>Examples</STRONG>
+<table BGColor="White"><tr><td>
+   <dd><b>mov</b> <FONT Color="Navy">al</FONT>, [<FONT Color="Gray">es</FONT>:<FONT Color="Navy">si</FONT>+<FONT Color="Red">message</FONT>] 
+   <dd><b>mov</b> <FONT Color="Navy">al</FONT>, <FONT Color="Red">message</FONT>[<FONT Color="Gray">ss</FONT>:<FONT Color="Navy">si</FONT>]<br><br>
+   <dd><b>mov</b> <FONT Color="Navy">al</FONT>, <FONT Color="Gray">cs</FONT>:[<FONT Color="Navy">si</FONT>+<FONT Color="Red">message</FONT>+<FONT Color="#004000">3</FONT>]     
+   <dd><b>mov</b> <FONT Color="Navy">al</FONT>, <FONT Color="Red">message</FONT>[<FONT Color="Gray">gs</FONT>:<FONT Color="Navy">si</FONT>+<FONT Color="#004000">3</FONT>] <br>
+<br>
+<FONT Color="Maroon">message</font>: <b>db</b> <FONT Color="#004000">'Hello World'</FONT>, <FONT Color="#004000">0</FONT>
+</td></tr></table>
+<BR><BR><BR>
+
+
+<h2>Using them</h2>
+<dd>Put the expression for the memory address in square brackets.  If you use a label before the brackets, that address is added to the offset.  Labels can also be added inside the brackets.
+<BR><BR><BR>
+<h2>Examples</h2>
+<table BGColor="White"><tr><td>
+   <dd><b>mov</b> <FONT Color="Navy">al</FONT>, [<FONT Color="Navy">si</FONT>+<FONT Color="Red">message</FONT>] 
+   <dd><b>mov</b> <FONT Color="Navy">al</FONT>, <FONT Color="Red">message</FONT>[<FONT Color="Navy">si</FONT>] <i><FONT Color="Purple">; this is the same as the previous statement.</i></font><br><br>
+   <dd><b>mov</b> <FONT Color="Navy">al</FONT>, [<FONT Color="Navy">si</FONT>+<FONT Color="Red">message</FONT>+<FONT Color="#004000">3</FONT>]     
+   <dd><b>mov</b> <FONT Color="Navy">al</FONT>, [<FONT Color="Navy">si</FONT>+<FONT Color="Red">message</FONT>+<FONT Color="#004000">2</FONT>+<FONT Color="#004000">1</FONT>] <i><FONT Color="Purple">; this is the same as the previous statement.</i></font>
+   <dd><b>mov</b> <FONT Color="Navy">al</FONT>, <FONT Color="Red">message</FONT>[<FONT Color="Navy">si</FONT>+<FONT Color="#004000">1</FONT>+<FONT Color="#004000">2</FONT>] <i><FONT Color="Purple">; this is the same as the previous 2 statements.</i></font><br>
+<br>
+<FONT Color="Maroon">message</font>: <b>db</b> <FONT Color="#004000">'Hello World'</FONT>, <FONT Color="#004000">0</FONT>
+</td></tr></table>
+
+<H2>Operand Sizes</H2>
+<DD>You can specify the size of the data being referred to using a few different symbols.  All of these work for memory references but some don't have data defintions that work yet.
+<TABLE CellPadding="5" Border="1">
+<TR>
+  <TD><STRONG>Symbol</STRONG></TD><TD><STRONG>Size</STRONG></TD><TD><STRONG>Description</STRONG></TD>
+</TR>
+<TR>
+  <TD><STRONG>BYTE</STRONG></TD><TD>8 bits</TD><TD>used in integer instructions, for data definitions use db</TD>
+</TR>
+<TR>
+  <TD><STRONG>WORD</STRONG></TD><TD>16 bits</TD><TD>used in integer and floating point instructions, for data definitions use dw</TD>
+</TR>
+<TR>
+  <TD><STRONG>DWORD</STRONG></TD><TD>32 bits</TD><TD>Double word, used in floating point instructions, for data definitions use dd(not working completely yet)</TD>
+</TR>
+<TR>
+  <TD><STRONG>QWORD</STRONG></TD><TD>64 bits</TD><TD>Quad word, used in floating point instructions, for data definitions use dq(not supported at all yet in data definitions)</TD>
+</TR>
+<TR>
+  <TD><STRONG>PWORD</STRONG></TD><TD>80 bits</TD><TD>Penta word, used as extended precision floating point in floating point instructions, for data definitions use dp(not supported yet at all in data definitions)</TD>
+</TR>
+<TR>
+  <TD><STRONG>OWORD</STRONG></TD><TD>128 bits</TD><TD>Octal word, used as single precision floating point in SSE instructions, for data definitions use do(not supported yet at all in data definitions)</TD>
+</TR>
+</body>
+
+</html>

@@ -1,0 +1,173 @@
+<html>
+<head>
+  <title>MyAssembler User Manual</title>
+</head>
+<body>
+<h1>MyAssembler User Manual</h1>
+<h2>Basic elements</h2>
+<ul>
+  <li><a href="Getting%20Started.html">Getting Started</a></li>
+  <li><a href="#SyntaxRules">Syntax rules</a></li>
+  <li><a href="Command%20Line%20Options.html">Command Line Options</a></li>
+  <li><a href="Instruction%20Set%20Files.html">Instruction set files</a></li>
+  <li><a href="COM%20Files.html">COM files</a></li>
+  <li><a href="#Changes">New and future changes</a></li>
+  <li><a href="#contact">Contact Information</a></li>
+</ul>
+<br>
+<hr>
+<h2><a name="SyntaxRules">Syntax Rules</a></h2>
+<ul>
+  <li><strong>Comments</strong>
+    <ul>
+      <li>can be made using the <b>;</b> symbol or the <b>//</b>
+symbols.</li>
+      <li>multilined comments can be done starting with a "<b>comment *</b>"
+line. The last line of the comment can only contain a single "<b>*</b>"</li>
+    </ul>
+  </li>
+  <li><strong>Data</strong> can be defined using <b>db</b> and <b>dw</b>.</li>
+  <li><strong>Labels</strong>
+    <ul>
+      <li>can be defined using the <b>:</b> after the name of the
+label. </li>
+      <li>You can also just use a space before a data statement. </li>
+      <li>Refer to the offset of a label using the word offset before
+the label. For example, move the address of label "x" into ax using
+this code... "mov ax, offset x"</li>
+    </ul>
+  </li>
+  <li><strong>Memory References</strong> a few addressing modes are
+supported. Click <a href="Memory%20References.html">here</a> for more
+information. </li>
+  <li><strong>Opcodes</strong> use Intel syntax. First is the opcode
+name, if any operands are required, followed by the first operand and
+the second operand. The specific opcodes and operands are determined in
+instruction set files. You can view an alphabetical listing of the
+instruction set by clicking View -&gt; Opcode Listing</li>
+  <li><strong>Immediate values</strong> can be in hex, binary, decimal,
+octal, and character format.
+    <ul>
+      <li><strong>Negative</strong> signs can be placed before the
+numbers to make them negative. This works for hex, octal, decimal, and
+binary.</li>
+      <li><strong>Hex</strong>, is indicated by placing the letter 'h'
+after your number. Hex can also be represented in the c++ style
+starting with '0x' followed by the hex digits. </li>
+      <li><strong>Octal</strong> is represented by using the letter 'o'
+at the end of the digits. </li>
+      <li><strong>Binary</strong> is represented by the letter 'b'
+being placed at the end of the digits. </li>
+      <li><strong>Decimal</strong> are represented the usual way. You
+can also use a trailing letter "d". 10 in decimal is the default radix,
+number base, so you don't need anything after the number's digits
+unless you set the radix to something else.</li>
+      <li>For <strong>characters</strong>, use a ' before and after
+the character with the character between.</li>
+      <li>For <strong>strings</strong>, use a ' before and after the
+character string.</li>
+    </ul>
+  </li>
+  <li>For a grammar of a line of assembly code, click <a
+ href="MyAssembler%20grammar.html">here</a>
+  </li>
+</ul>
+<br>
+<br>
+<h2><a name="Changes">New and future changes</a></h2>
+<strong>New Changes</strong>
+<ul>
+  <li>support for memory references</li>
+  <li>disassembling memory references</li>
+  <li>disassembling is working for some programs that don't use data
+definitions</li>
+  <li>eliminated a bug that happens when you use spaces in a memory
+reference</li>
+  <li>eliminated a bug that happens when you try using ',' as an
+immediate value</li>
+  <li>assembles more memory references ie. "WORD PTR [SI+0100h]" This
+way, after disassembling a program that uses them, it can be
+reassembled without problems.</li>
+  <li>an error was fixed when exporting to html and using &lt; and &gt;
+signs in the code.</li>
+  <li>eliminated a bug that eliminates multiple spaces from character
+strings</li>
+  <li>eliminated a bug with memory references that use several constant
+terms</li>
+  <li>eliminated a bug with byte numbers for the assemble process
+document counting up to 0 instead of from 0 to the end of the program</li>
+  <li>eliminated a bug that happens when you use a ',' in a character
+string</li>
+  <li>support for command line options</li>
+  <li>support for labeling data without using a :</li>
+  <li>starting to add a directive for switching case sensativity on but
+not working yet</li>
+  <li>a little error check to prevent loading instruction set files
+more than once using the include directive</li>
+  <li>error assembling the statement "push 5". It assembles the same as
+"push gs"</li>
+  <li>eliminated a bug that happens when you use a ':' when you aren't
+defining a label for example " mov al,':' "</li>
+  <li>eliminated a bug that happens when a numarical operand is not an
+immediate value. ie. shr reg16,"1" in the instruction set files. shr
+ax,1 will assemble right but shr ax,2 will assemble exactly the same
+way.</li>
+  <li>support for multilined comments</li>
+  <li>a check for duplicate instructions loaded from the instruction
+set files</li>
+  <li>instruction set files basically complete except for instructions
+using 3 operands</li>
+  <li>stopped the assembler from loading instruction set files twice</li>
+  <li>support for a radix directive used in Tasm example line ".Radix
+10h" This sets the default number base. The base used when there is no
+letter left behind.</li>
+  <li>all addressing modes are supported however there are no multiple
+passes for optimization</li>
+  <li>eliminated a bug that happens when outputting to html lines of
+code with : where there is no label</li>
+  <li>support for segment overrides (ie. a memory reference statement
+like... "byte ptr[es: si]")</li>
+  <li>support for instructions that use 3 operands</li>
+  <li>using multiple passes to find the optimal memory addressing mode</li>
+</ul>
+<strong>Future Changes</strong>
+<ul>
+  <li>bug with some registers being confused with immediate values..
+ie. cmp al,dh (cmp reg8,reg8)-&gt; cmp al, 0Dh (cmp reg8,i8)</li>
+  <li>bug after disassembling a file and closing the program, raises InvalidPointer or EAccessViolation</li>
+  <li>"sub di, 2" doesn't seem to do anything. This problem will be
+checked out.</li>
+  <li>support for using " quote signs to define character strings
+instead of just '</li>
+  <li>support for <b>DUP</b> in data definitions that duplicates data</li>
+  <li>should show an error message when a label is used that isn't
+defined</li>
+  <li>support for memory references that don't use square brackets but
+instead just use the name of a label</li>
+  <li>support for putting the prefix and assembly statement on the same
+line</li>
+  <li>adding a way of defining the type of "opcode" in the instruction
+sets. This can be useful in defining prefixes differently than normal
+opcodes so they can be assembled properly. There may be types of
+opcodes like "jump", "call"... That can help with jump detection and
+make it so data sections can be jumped over in the disassembling
+process. This would prevent the need for the rest of the program to be
+put into a hex dump instead of being properly disassembled. Labels
+could be created and refered to instead of constant numbers.</li>
+  <li>support for the EQU and = directives used in most assemblers.
+Also, possibly #define as used in c/c++ and rc files</li>
+  <li>more instructions being added to the instruction set files</li>
+  <li>support for procedures</li>
+  <li>support for structures</li>
+</ul>
+<h2><a name="contact">Contact Information</a></h2>
+<dd>If you have a question or a problem with this assembler, any tools
+with it or source code, contact me by email. My email address is <a
+ href="mailto:greijos@hotmail.com">greijos@hotmail.com</a>.
+</dd>
+<dd>Also, if you have any source code of your own that you want
+included with the program, please send it to me. It would be nice to
+have some more fairly simple examples with thorough documentation.
+</dd>
+</body>
+</html>

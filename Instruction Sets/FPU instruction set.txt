@@ -1,0 +1,234 @@
+// FPU instructions for Intel x86 processor
+
+#colour FFB0FFh // used if and when the opcode list is outputted to html to help separate these instructions from the rest
+
+#symbols
+
+000	st0
+001	st1
+010	st2
+011	st3
+100	st4
+101	st5
+110	st6
+111	st7 
+
+#defines
+
+stck = st0, st1, st2, st3, st4, st5, st6, st7
+
+// mem32 = reference to 32 bits of memory (DWord)
+// mem64 = reference to 64 bits of memory (QWord)
+// mem80 = reference to 80 bits of memory (PWord)
+
+#opcodes
+
+// binary |		opcode |			size
+
+1101100111110111	fincstp				// increase stack pointer
+10011011		fwait				// same machine code as retf
+
+100110111101101111100001	fdisi			// disable interupts
+1001101111100001	fndisi				
+
+1101100111001		fxch	stck			// 2 bytes
+
+
+100110111101101111100011	finit				// Initialize FPU after checking for pending unmasked floating-point exceptions
+
+11011110		ficom #mode+010 mem16
+11011010		ficom #mode+010 mem32
+1101101111110		fcomi	"st",stck #asmonly
+1101101111110		fcomi	"st0",stck
+1101111111110		fcomip	"st",stck #asmonly
+1101111111110		fcomip	"st0",stck
+
+
+11011110		fidiv #mode+110 mem16
+11011010		fidiv #mode+110 mem32
+
+11011110		fidivr #mode+111 mem16
+11011010		fidivr #mode+111 mem32
+
+11011110		ficomp #mode+011 mem16
+11011010		ficomp #mode+011 mem32
+
+11011111		fild #mode+111 mem16
+11011011		fild #mode+000 mem32
+11011111		fild #mode+101 mem64
+
+11011110		fimul #mode+001 mem16
+11011010		fimul #mode+001 mem32
+
+11011111		fist #mode+010 mem16
+11011011		fist #mode+010 mem32
+
+11011111		fistp #mode+011 mem16
+11011011		fistp #mode+011 mem32
+11011111		fistp #mode+111 mem64
+
+11011110		fisub #mode+100 mem16
+11011010		fisub #mode+100 mem32
+
+11011110		fisubr #mode+101 mem16
+11011010		fisubr #mode+101 mem32
+
+11011001		fld #mode+000 mem32
+
+11011101		fld #mode+000 mem64
+11011011		fld #mode+101 mem80
+1101100111000		fld	stck			// 2 bytes, from Intel reference
+
+11011000		fmul #mode+001 mem32
+11011100		fmul #mode+001 mem64
+
+1101110011001		fmul "st1",stck // multiply st0 by stck and store in st1
+1101100011001		fmul "st0",stck // multiply st0 by stck and store in st0
+
+11011101 		frstor #mode+100 mem // size of memory may be 94-bit or 108-bit so no use in specifying size
+11011101		fsave #mode+110 mem // store FPU state
+
+11011001		fst #mode+010 mem32
+11011101		fst #mode+010 mem64
+1101100111010		fst stck
+
+11011001		fstcw #mode+111 mem16 // store control word
+
+11011001		fstenv #mode+110 mem // store FPU environment
+1101111011001 		fmulp stck 
+
+11011001		fstp #mode+011 mem32
+11011101		fstp #mode+011 mem64
+11011011		fstp #mode+011 mem80
+1101110111011		fstp stck
+
+11011101		fstsw #mode+111 mem16 // store status word 
+
+11011000		fsub #mode+100 mem32
+11011100		fsub #mode+100 mem64
+1101100011100		fsub "st0", stck // st0 <- st(0)-stck
+1101110011100		fsub "st1", stck // st1 <- st(0)-stck
+
+1101111011101		fsubp	stck #asmonly
+1101111011101		fsubp	stck, "st0"
+
+
+11011000		fsubr #mode+101 mem32
+11011100		fsubr #mode+101 mem64
+1101100011100		fsubr "st0", stck
+1101110011100		fsubr "st1", stck
+
+11011110		fiadd #mode+000 mem16
+11011010		fiadd #mode+000 mem32
+
+11011000		fdivr #mode+111 mem32
+11011100		fdivr #mode+111 mem64
+
+11011000		fdiv #mode+110 mem32
+11011100		fdiv #mode+110 mem64
+1101100011110		fdiv "st0",stck
+1101110011110		fdiv "st1",stck
+
+11011000		fcomp #mode+011 mem32
+11011100		fcomp #mode+011 mem64
+
+11011000		fcom #mode+010 mem32
+11011100		fcom #mode+010 mem64
+
+1101100011000		fadd "st0", stck
+1101110011000		fadd "st1", stck
+
+
+//------------------------------
+
+1101100111010000	fnop				// 2 bytes
+
+11011000		fadd #mode+000 mem32
+
+11011111		fbld #mode+100 mem80		// Load Binary Coded Decimal
+
+1101100111100000	fchs				// 3 bytes
+1101100111100001	fabs				// 2 bytes
+
+
+
+1101100111100100	ftst				// 2 bytes, compare with 0.0
+1101100111100101	fxam				// 2 bytes, examine
+
+1101100111101000	fld1				// 2 bytes
+1101100111101001	fldl2t				// 2 bytes, load the base 10 log of 2
+1101100111101010	fldL2e				// 2 bytes, load natural log of 2
+1101100111101011	fldpi				// 2 bytes, load pi
+
+1101100111101100	fldlg2				// 2 bytes, load log of 2
+1101100111101101	fldln2				// 2 bytes
+
+1101100111101110	fldz				// 2 bytes
+
+1101100111110000	f2xm1				// 2 bytes
+1101100111110001	fyL2x				// 2 bytes
+
+1101100111110010	fptan				// 2 bytes
+1101100111110011	fpatan				// 2 bytes
+1101100111110100	fxtract				// 2 bytes
+1101100111110101	fprem1				// 2 bytes
+1101100111110110	fDecStp				// 2 bytes
+
+1101100111111000	fprem				// 2 bytes, partial remander
+
+1101100111111001	fyL2XP1				// 2 bytes, ST(1) * log2 (ST(0)+1.0)
+
+1101100111111100	fRndInt				// 2 bytes, round to integer
+
+1101100111111010	fSqrt				// 2 bytes
+1101100111111011	fSinCos				// 2 bytes
+1101100111111101	fScale				// 2 bytes, scale st0 by st1
+1101100111111110	fSin				// 2 bytes
+1101100111111111	fCos				// 2 bytes
+
+
+100110111101101111100000	feni			// 3 bytes
+
+1101101111100010	fnclex				// 2 bytes
+1101101111100100	fSetPm				// 2 bytes
+
+1101101111100011	fninit				// 2 bytes, Initialize FPU without checking for pending unmasked floating-point exceptions
+
+11011100		fadd #mode+000 mem64
+
+1101100011101		fsubr	"st0", stck		// 2 bytes
+
+1101110011100		fsubr	stck, "st0"		// 2 bytes
+
+1101111011100		fsubrp	stck, "st0"		// 2 bytes
+1101111011100001	fsubrp				// 2 bytes
+
+
+1101111011000		faddp	stck, "st0"		
+1101111011000		faddp	stck #asmonly
+
+
+1101111111100000	fstsw				// 2 bytes
+
+
+#examples
+
+11011001000111101011101100000001  fstp [y]
+11011001000001101011101100000001  fld	[y] 
+
+11011111000111101011111100000001  fistp	[i]
+
+11011000001001101011001100000001  fsub	[y_step]
+
+11011000000001101011101100000001  fadd	[y]
+
+
+
+11011001		fld #mode+000 mem32
+
+fld DWORD PTR [BX+SI+0h]	
+
+offset < 256 so mode = 00
+BX+SI -> 000	
+no offset
+11011001, 00 000 000

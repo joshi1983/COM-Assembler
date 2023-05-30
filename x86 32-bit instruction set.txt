@@ -1,0 +1,59 @@
+// this file is loaded by the assembler to get information on converting assembly instructions
+// 32 bit Intel x86 assembly / machine code translation, 8 and 16 bit instructions are defined in another file
+
+// This is not a complete instruction set so if you can help complete it, it would be a great help.
+
+#colour B0B0B0h // colour to separate these instructions from other types of instructions in the opcode listing.
+
+
+#symbols
+
+// Binary |	register	 
+
+// 32-bit registers
+000		eax
+001		ecx
+010		edx
+011		ebx
+100		esp
+101		ebp
+110		esi
+111		edi
+
+#defines
+
+reg32 = eax, ebx, ecx, edx, esp, ebp, esi, edi
+
+// reg32 -> 32-bit register
+
+// mem -> general memory reference
+// mem32 -> address to a 32 bit variable
+// All memory references are programmed into the assembler.  They all use 19 bits.  first 3 determine the addressing mode and the rest is an offset.
+
+// i32(32-bit immediate value) defined in the assembler
+
+
+#opcode // indicate beginning of opcode definitions
+
+// Binary |		opcode | 	operands |	machine code size
+0000111100110000	wrmsr				// Write the value in EDX:EAX to MSR specified by ECX, from Intel specifications
+0000111100110100	sysenter			// Fast call to privilege level 0 system procedures
+0000111100110101	sysexit				// Fast return to privilege level 3 user code
+00011101		sbb		"eax",i32	// 5 bytes
+00111100 		cmp 		"eax", i32	// 5 bytes
+01101111		outsd				// 1 byte
+10101001		test		"eax", i32		// 5 bytes
+10101111		sbb				// compare eax with the doubleword at ES:(E)DI and set status flags 
+11001111		iretd				// same machine code as iret but intended for a 32-bit operand
+11100101		in		"eax", i8	// 2 bytes
+11100111		out		i8, "eax"	// 2 byte output dword in eax to 1/0 port address i8
+11101101		in 		"eax", "dx"	// input doubleword from 1/0 port in DX into eax
+11101111		out		"dx", "eax"	// 1 byte output dword in eax to 1/0 port address DX
+
+
+#examples: // indicate that the following information is ignored by the assembler
+// this section is to help you understand how the process works.
+
+
+// Binary-Hex |				assembly
+

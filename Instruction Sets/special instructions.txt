@@ -1,0 +1,43 @@
+#include <8086 instruction set.txt> // where the registers reg8 and reg16 are defined
+
+#colour AFAFFFh
+
+#symbols
+
+// Binary |	register	 
+000	cr0
+001	cr1
+010	cr2
+011	cr3
+100	cr4
+// 101, 110, 111 are reserved. 
+
+// debug registers
+000	dr0
+001	dr1
+010	dr2
+011	dr3
+100	dr4
+101	dr5
+110	dr6
+111	dr7
+
+
+#defines
+creg = cr0,cr1,cr2,cr3,cr4 // control registers
+dreg = dr0,dr1,dr2,dr3,dr4,dr5,dr6,dr7 // debug registers
+
+#opcode
+
+// move to and from control registers
+000011110010001011000	mov "cr0", reg16
+// mov "cr1", reg16 is not included in the Intel reference
+000011110010001011010	mov "cr2", reg16
+000011110010001011011	mov "cr3", reg16
+000011110010001011100	mov "cr4", reg16
+000011110010000011	mov creg, reg16
+
+// move to and from debug registers
+000011110010001111	mov	dreg, reg16
+000011110010000111	mov	reg16, dreg #revmachoperand 
+

@@ -1,0 +1,664 @@
+<HTML>
+<!-- Created with MyAssembler -->
+
+<HEAD><TITLE>Instruction Set</TITLE></HEAD>
+<BODY>
+
+<TABLE Border="1" CellPadding="5">
+<CAPTION><STRONG>Instruction Set</STRONG></CAPTION>
+<TR><TD><B>Opcode</B></TD><TD><B>Operands</B></TD><TD><B>Machine code</B></TD></TR>
+ <TR BGColor="#FFFFFF">
+	<TD>xor</TD><TD> ax, reg8</TD><TD>0011 0101, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>xor</TD><TD> al, reg8</TD><TD>0011 0100, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>xor</TD><TD> reg16, reg16</TD><TD>0011 0011, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>xor</TD><TD> reg8, reg8</TD><TD>0011 0010, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>xlat</TD><TD></TD><TD>1101 0111, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>xchg</TD><TD> reg8, reg8</TD><TD>1000 0110, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>xadd</TD><TD> reg16, reg16</TD><TD>0000 1111, 1100 0001, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>xadd</TD><TD> reg8, reg8</TD><TD>0000 1111, 1100 0000, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>wrmsr</TD><TD></TD><TD>0000 1111, 0001 1000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>wbinvd</TD><TD></TD><TD>0000 1111, 0000 1001, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>wait</TD><TD></TD><TD>1001 1011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>verw</TD><TD> reg16</TD><TD>0000 1111, 0000 0000, 11101</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>verr</TD><TD> reg8</TD><TD>0000 1111, 0000 0000, 11100</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>ud2</TD><TD></TD><TD>0000 1111, 0000 1011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>test</TD><TD> reg16, i16</TD><TD>1111 0111, 11000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>test</TD><TD> reg8, i8</TD><TD>1111 0110, 11000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>test</TD><TD> i16</TD><TD>1010 1001, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>test</TD><TD> i8</TD><TD>1010 1000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>test</TD><TD> reg16, reg16</TD><TD>1000 0101, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>test</TD><TD> reg8, reg8</TD><TD>1000 0100, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>sub</TD><TD> i16</TD><TD>0010 1101, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>sub</TD><TD> i8</TD><TD>0010 1100, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>sub</TD><TD> reg16, reg16</TD><TD>0010 1001, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>sub</TD><TD> reg8, reg8</TD><TD>0010 1000, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>stosw</TD><TD></TD><TD>1010 1011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>stosb</TD><TD></TD><TD>1010 1010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>sti</TD><TD></TD><TD>1111 1011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>std</TD><TD></TD><TD>1111 1101, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>stc</TD><TD></TD><TD>1111 1001, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>scasw</TD><TD></TD><TD>1010 1111, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>scasb</TD><TD></TD><TD>1010 1110, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>sbb</TD><TD> reg16, reg16</TD><TD>0001 1001, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>sbb</TD><TD> reg8, reg8</TD><TD>0001 1000, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>sar</TD><TD> reg16</TD><TD>1101 0001, 11111</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>sar</TD><TD> reg8</TD><TD>1101 0000, 11111</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>sahf</TD><TD></TD><TD>1001 1101, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>rsm</TD><TD></TD><TD>0000 1111, 1010 1010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>ror</TD><TD> reg16</TD><TD>1101 0001, 11001</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>ror</TD><TD> reg8</TD><TD>1101 0000, 11001</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>rol</TD><TD> reg16</TD><TD>1101 0001, 11000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>rol</TD><TD> reg8</TD><TD>1101 0000, 11000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>ret</TD><TD></TD><TD>1100 0011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>retfd</TD><TD></TD><TD>0110 0110, 1100 1011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>repz</TD><TD></TD><TD>1111 0011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>repe</TD><TD></TD><TD>1111 0011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>rep</TD><TD></TD><TD>1111 0011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>repnz</TD><TD></TD><TD>1111 0010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>repne</TD><TD></TD><TD>1111 0010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>rdtsc</TD><TD></TD><TD>0000 1111, 0011 0001, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>rdpmc</TD><TD></TD><TD>0000 1111, 0011 0011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>rdmsr</TD><TD></TD><TD>0000 1111, 0011 0010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>rcr</TD><TD> reg16</TD><TD>1101 0001, 11011</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>rcr</TD><TD> reg8</TD><TD>1101 0000, 11011</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>rcl</TD><TD> reg16</TD><TD>1101 0001, 11010</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>rcl</TD><TD> reg8</TD><TD>1101 0000, 11010</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>pushf</TD><TD></TD><TD>1001 1100, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>push</TD><TD> i8</TD><TD>0110 1010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>push</TD><TD> i16</TD><TD>0110 1000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>pusha</TD><TD></TD><TD>0110 0000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>popf</TD><TD></TD><TD>1001 1101, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>popa</TD><TD></TD><TD>0110 0001, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>pop</TD><TD> reg16</TD><TD>01011</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>pop</TD><TD> seg</TD><TD>000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>out</TD><TD> i16</TD><TD>1110 0111, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>out</TD><TD> i8</TD><TD>1110 0110, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>or</TD><TD> reg16, i16</TD><TD>1000 0001, 11001</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>or</TD><TD> reg8, i8</TD><TD>1000 0000, 11001</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>or</TD><TD> mem8, i8</TD><TD>1000 0000, 00001</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>or</TD><TD> reg16, reg16</TD><TD>0000 1011, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>or</TD><TD> reg8, reg8</TD><TD>0000 1010, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>or</TD><TD> reg8, mem8</TD><TD>0000 1010, 00000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>not</TD><TD> reg8</TD><TD>1111 0110, 11010</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>nop</TD><TD></TD><TD>1001 0000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>neg</TD><TD> reg16</TD><TD>1111 0111, 11011</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>neg</TD><TD> reg8</TD><TD>1111 0110, 11011</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>mov</TD><TD> reg16, i16</TD><TD>1100 0111, 11000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>mov</TD><TD> reg8, i8</TD><TD>10110</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>movsw</TD><TD></TD><TD>1010 0101, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>movsb</TD><TD></TD><TD>1010 0100, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>mov</TD><TD> reg16, reg16</TD><TD>1000 1011, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>mov</TD><TD> reg8, reg8</TD><TD>1000 1010, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>mov</TD><TD> reg8, mem8</TD><TD>1000 1010, 10</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>ltr</TD><TD> reg8</TD><TD>0000 1111, 0000 0000, 11011</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>loop</TD><TD> i8</TD><TD>1110 0010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>loopz</TD><TD> i8</TD><TD>1110 0001, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>loopnz</TD><TD> i8</TD><TD>1110 0000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>loopne</TD><TD> i8</TD><TD>1110 0000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>loope</TD><TD> i8</TD><TD>1110 0001, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>lodsb</TD><TD></TD><TD>1010 1100, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>lock</TD><TD></TD><TD>1111 0000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>lmsw</TD><TD> reg8</TD><TD>0000 1111, 0000 0001, 11110</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>les</TD><TD> reg16, mem</TD><TD>1100 0100, 00000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>leave</TD><TD></TD><TD>1100 1001, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>lea</TD><TD> reg16, mem</TD><TD>1000 1101, 10</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>lds</TD><TD> reg16, mem</TD><TD>1100 0101, 00000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>lar</TD><TD> reg8, reg8</TD><TD>0000 1111, 0000 0010, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>lahf</TD><TD></TD><TD>1001 1111, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jz</TD><TD> i8</TD><TD>0111 0100, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>js</TD><TD> i8</TD><TD>0111 1000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jpo</TD><TD> i8</TD><TD>0111 1011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jp</TD><TD> i8</TD><TD>0111 1010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jo</TD><TD> i8</TD><TD>0111 0000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jnz</TD><TD> i8</TD><TD>0111 0101, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jns</TD><TD> i8</TD><TD>0111 1001, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jnp</TD><TD> i8</TD><TD>0111 1011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jno</TD><TD> i8</TD><TD>0111 0001, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jnl</TD><TD> i8</TD><TD>0111 1101, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jng</TD><TD> i8</TD><TD>0111 1110, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jnge</TD><TD> i8</TD><TD>0111 1100, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jne</TD><TD> i8</TD><TD>0111 0101, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jnc</TD><TD> i8</TD><TD>0111 0011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jnbe</TD><TD> i8</TD><TD>0111 0111, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jnb</TD><TD> i8</TD><TD>0111 0011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jna</TD><TD> i8</TD><TD>0111 0110, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jnae</TD><TD> i8</TD><TD>0111 0010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jmp</TD><TD> reg8</TD><TD>1111 1111, 11100</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jmp</TD><TD> i8</TD><TD>1110 1011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jmp</TD><TD> i16</TD><TD>1110 1001, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jle</TD><TD> i8</TD><TD>0111 1110, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jl</TD><TD> i8</TD><TD>0111 1100, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jg</TD><TD> i8</TD><TD>0111 1111, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>je</TD><TD> i8</TD><TD>0111 0100, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jcxz</TD><TD> i8</TD><TD>1110 0011, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jc</TD><TD> i8</TD><TD>0111 0010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jb</TD><TD> i8</TD><TD>0111 0010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>ja</TD><TD> i8</TD><TD>0111 0111, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>jae</TD><TD> i8</TD><TD>0111 0011, </TD>
+ </TR>
+ <TR BGColor="#B0B0B0">
+	<TD>iretd</TD><TD></TD><TD>1100 1111, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>iret</TD><TD></TD><TD>1100 1111, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>inc</TD><TD> reg16</TD><TD>1111 1111, 11000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>inc</TD><TD> mem8</TD><TD>1111 1111, 00000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>inc</TD><TD> reg8</TD><TD>1111 1110, 11000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>in</TD><TD> i16</TD><TD>1110 0101, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>in</TD><TD> i8</TD><TD>1110 0100, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>into</TD><TD></TD><TD>1100 1110, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>int</TD><TD> i8</TD><TD>1100 1101, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>inc</TD><TD> reg16</TD><TD>01000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>imul</TD><TD> reg16</TD><TD>1111 0111, 11101</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>imul</TD><TD> reg8</TD><TD>1111 0110, 11101</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>hlt</TD><TD></TD><TD>1111 0100, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fyl2xp1</TD><TD></TD><TD>1101 1001, 1111 1001, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fyl2x</TD><TD></TD><TD>1101 1001, 1111 0001, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fxtract</TD><TD></TD><TD>1101 1001, 1111 0100, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fxch</TD><TD> stck</TD><TD>1101 1001, 11001</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fxam</TD><TD></TD><TD>1101 1001, 1110 0101, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fwait</TD><TD></TD><TD>1001 1011, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fucompp</TD><TD></TD><TD>1101 1010, 1110 1001, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>ftst</TD><TD></TD><TD>1101 1001, 1110 0100, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fsub</TD><TD> memf</TD><TD>1101 1000, 00100</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fstsw</TD><TD></TD><TD>1101 1111, 1110 0000, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fstp</TD><TD> stck</TD><TD>1101 1101, 11011</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fst</TD><TD> stck</TD><TD>1101 1101, 11010</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fstp</TD><TD> memf</TD><TD>1101 1001, 00011</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fsqrt</TD><TD></TD><TD>1101 1001, 1111 1010, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fsin</TD><TD></TD><TD>1101 1001, 1111 1110, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fsincos</TD><TD></TD><TD>1101 1001, 1111 1011, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fsetpm</TD><TD></TD><TD>1101 1011, 1110 0100, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fscale</TD><TD></TD><TD>1101 1001, 1111 1101, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>frndint</TD><TD></TD><TD>1101 1001, 1111 1100, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fptan</TD><TD></TD><TD>1101 1001, 1111 0010, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fprem</TD><TD></TD><TD>1101 1001, 1111 1000, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fprem1</TD><TD></TD><TD>1101 1001, 1111 0101, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fpatan</TD><TD></TD><TD>1101 1001, 1111 0011, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fnop</TD><TD></TD><TD>1101 1001, 1101 0000, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fninit</TD><TD></TD><TD>1101 1011, 1110 0011, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fndisi</TD><TD></TD><TD>1001 1011, 1110 0001, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fnclex</TD><TD></TD><TD>1101 1011, 1110 0010, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fmulp</TD><TD> stck</TD><TD>1101 1110, 11001</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fldz</TD><TD></TD><TD>1101 1001, 1110 1110, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fldpi</TD><TD></TD><TD>1101 1001, 1110 1011, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fldln2</TD><TD></TD><TD>1101 1001, 1110 1101, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fldlg2</TD><TD></TD><TD>1101 1001, 1110 1100, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fldl2t</TD><TD></TD><TD>1101 1001, 1110 1001, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fldl2e</TD><TD></TD><TD>1101 1001, 1110 1010, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fld1</TD><TD></TD><TD>1101 1001, 1110 1000, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fld</TD><TD> stck</TD><TD>1101 1001, 11000</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fld</TD><TD> memf</TD><TD>1101 1001, 00000</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fld</TD><TD> stck</TD><TD>1101 1001, 11000</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fistp</TD><TD> memf</TD><TD>1101 1111, 00011</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>finit</TD><TD></TD><TD>1101 1011, 1110 0011, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fincstp</TD><TD></TD><TD>1101 1001, 1111 0111, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>feni</TD><TD></TD><TD>1001 1011, 1101 1011, 1110 0000, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fdisi</TD><TD></TD><TD>1001 1011, 1101 1011, 1110 0001, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fdecstp</TD><TD></TD><TD>1101 1001, 1111 0110, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fcos</TD><TD></TD><TD>1101 1001, 1111 1111, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fcomi</TD><TD> stck</TD><TD>1101 1011, 11110</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fcmovu</TD><TD> stck</TD><TD>1101 1010, 11011</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fcmovnu</TD><TD> stck</TD><TD>1101 1011, 11011</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fcmovne</TD><TD> stck</TD><TD>1101 1011, 11001</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fcmovnbe</TD><TD> stck</TD><TD>1101 1011, 11010</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fcmovnb</TD><TD> stck</TD><TD>1101 1011, 11000</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fcmove</TD><TD> stck</TD><TD>1101 1010, 11001</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fcmovbe</TD><TD> stck</TD><TD>1101 1010, 11010</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fcmovb</TD><TD> stck</TD><TD>1101 1010, 11000</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fchs</TD><TD></TD><TD>1101 1001, 1110 0000, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fadd</TD><TD> memf</TD><TD>1101 1000, 00000</TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>fabs</TD><TD></TD><TD>1101 1001, 1110 0001, </TD>
+ </TR>
+ <TR BGColor="#FFB0FF">
+	<TD>f2xm1</TD><TD></TD><TD>1101 1001, 1111 0000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>dec</TD><TD> reg8</TD><TD>1111 1110, 11001</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>dec</TD><TD> reg16</TD><TD>01001</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>cmpsw</TD><TD></TD><TD>1010 0111, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>cmpsb</TD><TD></TD><TD>1010 0110, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>cli</TD><TD></TD><TD>1111 1010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>cld</TD><TD></TD><TD>1111 1100, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>clc</TD><TD></TD><TD>1111 1000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>call</TD><TD> i8</TD><TD>1110 1000, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>and</TD><TD> reg16, reg16</TD><TD>0010 0011, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>and</TD><TD> reg8, reg8</TD><TD>0010 0001, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>add</TD><TD> reg16, i8</TD><TD>1000 0011, 11000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>add</TD><TD> reg8, i8</TD><TD>1000 0000, 11000</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>add</TD><TD> reg16, reg16</TD><TD>0000 0011, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>add</TD><TD> reg8, reg8</TD><TD>0000 0010, 11</TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>aas</TD><TD></TD><TD>0011 1111, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>aam</TD><TD></TD><TD>1101 0100, 0000 1010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>aad</TD><TD></TD><TD>1101 0101, 0000 1010, </TD>
+ </TR>
+ <TR BGColor="#FFFFFF">
+	<TD>aaa</TD><TD></TD><TD>0011 0111, </TD>
+ </TR>
+
+</TABLE>
+
+<SUB>Opcode table created with MyAssembler</SUB>
+
+</BODY>
+</HTML>

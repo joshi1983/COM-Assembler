@@ -1,0 +1,264 @@
+// contains SSE instructions
+// all data from this file was compiled from an official Intel specification from http://developer.intel.com/design/pentium/manuals/
+// This data compilation is copyrighted by the developer of the assembler, Josh G.  All rights are reserved.
+// some instructions use 3 operands so that has to be supported in the assembler before including this instruction set file when the assembler loads.
+
+#colour AFFFAFh
+
+#include <x86 32-bit instruction set.txt> // defines reg32
+#include <MMX instructions.txt> // defines mmreg
+
+#symbols
+
+000 	xmm0
+001 	xmm1
+010 	xmm2
+011 	xmm3
+100 	xmm4
+101 	xmm5
+110 	xmm6
+111 	xmm7
+
+
+#defines
+
+xmmreg = xmmreg0,xmmreg1,xmmreg2,xmmreg3,xmmreg4,xmmreg5,xmmreg6,xmmreg7
+
+
+#opcodes
+
+// Sizes of memory references throughout the instructions below should be verified.
+
+
+// Add Packed Single-Precision Floating-Point Values
+000011110101100011	addps	xmmreg,xmmreg
+0000111101011000	addps #mode	xmmreg,mem128
+
+// Add Scalar Single-Precision Floating-Point Values
+11110011000011110101100011	addss	xmmreg,xmmreg
+111100110000111101011000	addss #mode	xmmreg,mem32
+
+// Bitwise Logical AND NOT of Packed Single-Precision Floating-Point Values
+000011110101010111	andnps	xmmreg,xmmreg
+0000111101010101	andnps #mode	xmmreg,mem128
+
+// Compare Packed Single-Precision Floating-Point Values
+000011111100001011	cmpps	xmmreg,xmmreg,i8
+0000111111000010	cmpps #mode	xmmreg,mem128,i8
+
+// Compare Scalar Single-Precision Floating-Point Values
+11110011000011111100001011	cmpss	xmmreg,xmmreg,i8
+111100110000111111000010	cmpss #mode	xmmreg,mem32,i8
+
+// Compare Scalar Ordered Single-Precision Floating-Point Values and Set EFlags
+000011110010111111	comiss	xmmreg,xmmreg
+0000111100101111	comiss #mode	xmmreg,mem32
+
+// Convert Packed Doubleword Integers to Packed Single-Precision Floating-Point Values
+000011110010110111	cvtps2pi	mmreg,xmmreg
+0000111100101101	cvtps2pi #mode	mmreg,mem64
+
+// Convert Doubleword Integer to Scalar Single-Precision Floating-Point Value
+11110011000011110010101011	cvtsi2ss	xmmreg,reg32
+111100110000111100101010	cvtsi2ss #mode	xmmreg,mem32
+
+// Convert with Truncation Packed Single-Precision Floating-Point Values to Packed Doubleword Integers
+000011110010110011	cvttps2pi	mmreg, xmmreg
+0000111100101100	cvttps2pi #mode	mmreg, mem64
+
+// Convert with Truncation Scalar Single-Precision Floating-Point Value to Doubleword Integer
+11110011000011110010110011	cvttss2si	reg32, xmmreg
+111100110000111100101100	cvttss2si #mode	reg32, mem32
+
+// Divide Packed Single-Precision Floating-Point Values
+000011110101111011	divps	xmmreg,xmmreg
+000011110101111011	divps #mode	xmmreg,mem128
+
+// Divide Scalar Single-Precision Floating-Point Values
+11110011000011110101111011	divss	xmmreg,xmmreg
+111100110000111101011110	divss #mode	xmmreg,mem32
+
+// Load MXCSR Register State
+// 000011111010111010	ldmxcsr	mem32 // instruction couldn't be added because from the Intel instruction reference, I couldn't see how it would make a multiple of 8 bits of machine code
+
+// Return Maximum Packed Single-Precision Floating-Point Value
+000011110101111111	maxps	xmmreg,xmmreg
+0000111101011111	maxps #mode	xmmreg,mem128
+
+
+// Return Maximum scalar Double-Precision Floating-Point Value
+11110011000011110101111111	maxss	xmmreg,xmmreg
+111100110000111101011111	maxss #mode	xmmreg,mem32
+
+// Return Minimum Packed Double-Precision Floating-Point Values
+000011110101110111	minps	xmmreg,xmmreg
+0000111101011101	minps #mode	xmmreg,mem128
+
+// Return Minimum Scalar Double-Precision Floating-Point Values
+11110011000011110101110111	minss	xmmreg,xmmreg
+111100110000111101011101	minss #mode	xmmreg,mem32
+
+// Move Aligned Packed Single-Precision Floating-Point Values
+000011110010100011 	movaps	xmmreg,xmmreg #revmachoperand #diasmonly
+0000111100101000 	movaps #mode	xmmreg,mem128
+000011110010100111 	movaps	xmmreg,xmmreg 			// I am confused by what is in the Intel specifications for this.  This might be wrong.
+0000111100101001 	movaps #mode	mem128, xmmreg #revmachoperand 			// I am confused by what is in the Intel specifications for this.  This might be wrong.
+
+// Move Packed Single-Precision Floating-Point Values High to Low
+000011110001001011	movhlps	xmmreg,xmmreg
+
+// Move High Packed Single-Precision Floating-Point Values
+0000111100010110	movhps	#mode	xmmreg,mem64
+0000111100010111	movhps	#mode	mem64,xmmreg #revmachoperand
+
+// Move Packed Single-Precision Floating-Point Values Low to High
+000011110001011011	movlhps		xmmreg,xmmreg
+
+// move Low Packed Single-Precision Floating-Point Values
+0000111100010010	movlps	#mode	xmmreg, mem64
+0000111100010011	movlps	#mode	mem64, xmmreg #revmachoperand
+
+// Move Extra Packed Single-Precision Floating-Point Values
+11110011000011110001000011	movmskps	reg32,xmmreg
+
+// Move Scalar Single-Precision Floating-Point Values
+11110011000011110001000011	movss	xmmreg,xmmreg #revmachoperand
+111100110000111100010000	movss #mode	xmmreg,mem32
+11110011000011110001000111	movss		xmmreg,xmmreg #revmachoperand
+111100110000111100010001	movss #mode	mem32,xmmreg #revmachoperand
+
+// Move Unaligned Packed Single-Precision Floating-Point Values
+000011110001000011	movups		xmmreg,xmmreg	#revmachoperand
+0000111100010000	movups #mode	xmmreg,mem128
+000011110001000111	movups		xmmreg,xmmreg	#revmachoperand
+0000111100010001	movups #mode	mem128,xmmreg	#revmachoperand
+
+// Multiply Packed Single-Precision Floating-Point Values
+000011110101100111	mulps		xmmreg,xmmreg
+0000111101011001	mulps #mode	xmmreg,mem128
+
+// Multiply Scalar Single-Precision Floating-Point Values
+11110011000011110101100111	mulss		xmmreg,xmmreg
+111100110000111101011001	mulss #mode	xmmreg,mem32
+
+// Bitwise Logical OR of Single-Precision Floating-Point Values
+000011110101011011	orps		xmmreg,xmmreg
+0000111101010110	orps #mode	xmmreg,mem128
+
+// Compute Reciprocals of Packed Single-Precision Floating-Point Values
+000011110101001111	rcpps		xmmreg,xmmreg
+0000111101010011	rcpps #mode	xmmreg,mem128
+
+// Compute Reciprocals of Scalar Single-Precision Floating-Point Value
+11110011000011110101001111	rcpss		xmmreg,xmmreg
+111100110000111101010011	rcpss #mode	xmmreg,mem128
+
+// Compute Reciprocals of Square Roots of Packed Single-Precision Floating-Point Values
+000011110101001011	rsqrtps	xmmreg,xmmreg
+0000111101010010	rsqrtps #mode	xmmreg,mem128
+
+// Compute Reciprocals of Square Roots of Scalar Single-Precision Floating-Point Values
+11110011000011110101001011	rsqrtss		xmmreg,xmmreg
+111100110000111101010010	rsqrtss	#mode 	xmmreg,mem32
+
+// Shuffle Packed Single-Precision Floating-Point Values
+000011111100011011		shufps	xmmreg,xmmreg,i8
+0000111111000110		shufps #mode	xmmreg,mem128,i8
+
+// Compute Square Roots of Packed Single-Precision Floating-Point Values
+000011110101000111	sqrtps	xmmreg,xmmreg
+0000111101010001	sqrtps #mode	xmmreg,mem128
+
+// Compute Square Roots of Scalar Single-Precision Floating-Point Values
+11110011000011110101000111	sqrtss	xmmreg,xmmreg
+111100110000111101010001	sqrtss #mode	xmmreg,mem32
+
+// Store MXCSR Register State
+// 000011111010111011		stmxcsr	mem32 // left out because I can't see how this can make a multiple of 8 bits of machine code
+
+// Subtract Packed Single-Precision Floating-Point Values
+000011110101110011	subps		xmmreg,xmmreg
+0000111101011100	subps #mode	xmmreg,mem128
+
+// Subtract Scalar Single-Precision Floating-Point Values
+11110011000011110101110011	subss		xmmreg,xmmreg
+111100110000111101011100	subss #mode	xmmreg,mem32
+
+// Unordered Compare Scalar Ordered Single-Precision Floating-Point Values and Set EFLAGS
+000011110010111011	ucomiss		xmmreg,xmmreg
+0000111100101110	ucomiss	#mode	xmmreg,mem32
+
+// Unpack and Interleave High Packes Single-Precision Floating-Point Values
+000011110001010111	unpckhps	xmmreg,xmmreg
+0000111100010101	unpckhps #mode	xmmreg,mem128
+
+// Unpack and Interleave Low Packed Single-Precision Floating-Point Values
+000011110001010011	unpcklps	xmmreg,xmmreg
+0000111100010100	unpcklps #mode	xmmreg,mem128
+
+// Bitwise Logical XOR of Single-Precision Floating-Point Values
+000011110101011111	xorps	xmmreg,xmmreg
+0000111101010111	xorps #mode	xmmreg,mem128
+
+// Average Packed Integer
+000011111110000011	pavgb	mmreg,mmreg
+000011111110001111	pavgw	mmreg,mmreg
+0000111111100000	pavgb #mode	mmreg,mem64 
+0000111111100011	pavgw #mode	mmreg,mem128 
+
+// Extra Word
+000011111100010111	pextrw	reg32,mmreg,i8
+
+// Insert Word
+000011111100010011	pinsrw		mmreg,reg32,i8
+0000111111000100	pinsrw #mode	mmreg,mem16
+
+// Maximum of Packed Signed Word Integers
+000011111110111011	pmaxsw		mmreg,mmreg
+0000111111101110	pmaxsw #mode	mmreg,mem64
+
+
+// Maximum of Packed Unsigned Byte Integers
+000011111101111011	pmaxub		mmreg,mmreg
+0000111111011110	pmaxub #mode	mmreg,mem64
+
+// Minimum of Packed Signed Word Integers
+000011111110101011	pminsw		mmreg,mmreg
+0000111111101010	pminsw #mode	mmreg,mem64
+
+// Minimum of Packed Unsigned Byte Integers
+000011111101101011	pminub			mmreg,mmreg
+0000111111011010	pminub #mode		mmreg,mem
+
+// Move Byte Mask To Integer
+000011111101011111	pmovmskb		reg32,mmreg
+
+// Compute Sum of Absolute Differences
+000011111111011011		psadbw		mmreg,mmreg
+0000111111110110		psadbw	#mode	mmreg,mem64
+
+// Shuffle Packed Words
+000011110111000011	pshufw	mmreg,mmreg,i8
+//000011110111000011	pshufw #mode	mmreg,mem64,i8 // can't see how this can make a multiple of 8 bits of machine code so this was commented out.
+// That is exactly how it was left in the Intel PDF file.
+
+// Store Packed Single-Precision Floating-Point Values Using Non-Temporal Hint
+0000111100101011	movntps	#mode mem128,xmmreg 	#revmachoperand
+
+// Store Quadword Using Non-Temporal Hint
+0000111111100111	movntq	#mode	mem64,mmreg #revmachoperand
+
+// Prefetch Temperal to All Cache Levels
+//000011110001100001	prefetcht0	mem8 // don't know how this can make a multiple of 8 bits of machine code so this is commented out
+
+// Prefetch Temperal to First Level Cache
+//000011110001100010	prefetcht1	mem8 // don't know how this can make a multiple of 8 bits of machine code so this is commented out
+
+// Prefetch Temperal to Second Level Cache
+//000011110001100011	prefetcht2	mem8 // don't know how this can make a multiple of 8 bits of machine code so this is commented out
+
+// Prefetch Non-Temperal to All Cache Levels
+//000011110001100000	prefetchtnta	mem8 // don't know how this can make a multiple of 8 bits of machine code so this is commented out
+
+// Store Fence
+000011111010111011111000	sfence

@@ -1,0 +1,425 @@
+// SSE2 instructions
+// This is as complete as I could make it.  There are however some instructions in this file skipped because I couldn't understand what the Intel specification said about them.
+
+#include <sse instructions.txt> // defines xmmreg and mmreg
+#include <x86 32-bit instruction set.txt> // defines reg32
+
+
+#colour FFA080h
+
+#opcodes
+
+// size of memory references need to be checked.
+
+
+// Add Packed Double-Precision Floating-Point Values
+01100110000011110101100011	addpd		xmmreg,xmmreg
+011001100000111101011000	addpd #mode	xmmreg,mem128
+
+// Add Scalar Double-Precision Floating-Point Values
+11110010000011110101100011	addsd		xmmreg,xmmreg
+111100100000111101011000	addsd #mode	xmmreg,mem64
+
+// Bitwise Logical AND NOT of Packed Double-Precision Floatin-Point Values
+01100110000011110101010111	andnpd		xmmreg,xmmreg
+011001100000111101010101	andnpd #mode	xmmreg,mem128
+
+// Bitwise Logical AND of Packed Double-Precision Floatin-Point Values
+01100110000011110101010011	andpd		xmmreg,xmmreg
+011001100000111101010100	andpd #mode	xmmreg,mem128
+
+// Compare Packed Double-Precision Floating-Point Values
+01100110000011111100001011	cmppd		xmmreg,xmmreg,i8
+011001100000111111000010	cmppd #mode	xmmreg,mem128,i8
+
+// Compare Scalar Double-Precision Floating-Point Values
+11110010000011111100001011	cmpsd		xmmreg,xmmreg,i8
+111100100000111111000010	cmpsd #mode	xmmreg,mem64,i8
+
+// Compare Scalar Ordered Double-Precision Floating-Point Values and Set EFLAGS
+01100110000011110010111111	comisd		xmmreg,xmmreg
+011001100000111100101111	comisd #mode	xmmreg,mem64
+
+// Convert Packed Doubleword Integers to Packed Double-Precision Floating-Point Values
+01100110000011110010101011	cvtpi2pd	xmmreg,xmmreg
+011001100000111100101010	cvtpi2pd #mode	xmmreg,mem64
+
+// Convert Packed Double-Precision Floating-Point Values to Packed Doubleword Integers
+01100110000011110010110111	cvtpd2pi	mmreg,mmreg
+011001100000111100101101	cvtpd2pi #mode	mmreg,mem128
+
+// Convert Doubleword Integer to Scalar Double-Precision Floating-Point Value
+11110010000011110010101011	cvtsi2sd	xmmreg,reg32
+111100100000111100101010	cvtsi2sd #mode	xmmreg,mem32
+
+// Convert Scalar Double-Precision Float-Point Value to Doubleword Integer
+11110010000011110010110111	cvtsd2si	reg32,xmmreg
+111100100000111100101101	cvtsd2si #mode	reg32,mem64
+
+// Convert with Truncation Packed Double-Precision Floating-Point Value to Doubleword Integer
+11110010000011110010110011	cvttsd2si	reg32,xmmreg
+111100100000111100101100	cvttsd2si #mode	reg32,mem64
+
+// Convert Packed Double-Precision Floating-Point Values to Packed Single-Precision Floating-Point Values
+01100110000011110101101011	cvtpd2ps	xmmreg,xmmreg
+011001100000111101011010	cvtpd2ps #mode	xmmreg,mem128
+
+// Convert Packed Single-Precision Floating-Point Values to Packed Double-Precision Floating-Point Values
+000011110101101011		cvtps2pd	xmmreg,xmmreg
+0000111101011010		cvtps2pd #mode	xmmreg,mem64
+
+// Convert Scalar Double-Precision Floating-Point Value to Scalar Single-Precision Floating-Point Value
+11110010000011110101101011	cvtsd2ss	xmmreg,xmmreg
+111100100000111101011010	cvtsd2ss #mode	xmmreg,mem64
+
+// Convert Scalar Single-Precision Floating-Point Value to Scalar Double-Precision Floating-Point Value
+11110011000011110101101011	cvtss2sd	xmmreg,xmmreg
+111100110000111101011010	cvtss2sd #mode	xmmreg,mem32
+
+// Convert PAcked Double-Precision Floating-Point Values to Packed Doubleword Integers
+11110010000011111110011011	cvtpd2dq	xmmreg,xmmreg
+111100100000111111100110	cvtpd2dq #mode	xmmreg,mem128
+
+// Convert Packed Doubleword Integers to Packed Single-Precision Floating-Point Values
+11110011000011111110011011	cvtdq2pd	xmmreg,xmmreg
+111100110000111111100110	cvtdq2pd #mode	xmmreg,mem64
+
+// Convert Packed Single-Precision Floating-Point Values to Packed Doubleword Integers
+01100110000011110101101111	cvtps2dq	xmmreg,xmmreg
+011001100000111101011011	cvtps2dq #mode	xmmreg,mem128
+
+// Convert With Truncation Packed Single-Precision Floating-Point Values to Packed Doubleword Integers
+11110011000011110101101111	cvttps2dq	xmmreg,xmmreg
+111100110000111101011011	cvttps2dq #mode	xmmreg,mem128
+
+// Convert Packed Doubleword Integers to Packed Double-Precision Floating-Point Values
+000011110101101111		cvtdq2ps	xmmreg,xmmreg
+0000111101011011		cvtdq2ps #mode	xmmreg,mem128
+
+// Divide Packed Double-Precision Floating-Point Values
+01100110000011110101111011	divpd		xmmreg,xmmreg
+011001100000111101011110	divpd #mode	xmmreg,mem128
+
+// Divide Scalar Double-Precision Floating-Point Values
+11110010000011110101111011	divsd		xmmreg,xmmreg
+111100100000111101011110	divsd #mode	xmmreg,mem64
+
+// Return Maximum Packed Double-Precision Floating-Point Values
+01100110000011110101111111	maxpd		xmmreg,xmmreg
+011001100000111101011111	maxpd #mode	xmmreg,mem128
+
+// Return Maximum Scalar Double-Precision Floating-Point Value
+11110010000011110101111111	maxsd		xmmreg,xmmreg
+111100100000111101011111	maxsd #mode	xmmreg,mem64
+
+// Return Minimum Packed Double-Precision Floating-Point Values
+01100110000011110101110111	minpd		xmmreg,xmmreg
+011001100000111101011101	minpd #mode	xmmreg,mem128
+
+// Return Minimum Scalar Double-Precision Floating-Point Values
+11110010000011110101110111	minsd		xmmreg,xmmreg
+111100100000111101011101	minsd #mode	xmmreg,mem64
+
+// Move Aligned Packed Double-Precision Floating-Point Values
+01100110000011110010100111	movapd		xmmreg,xmmreg #revmachoperand
+011001100000111100101001	movapd #mode	xmmreg,mem128
+01100110000011110010100011	movapd		xmmreg,xmmreg #revmachoperand
+011001100000111100101000	movapd #mode	mem128, xmmreg #revmachoperand
+
+
+// Move High Packed Double-Precision Floating-Point Values
+011001100000111100010111	movhpd	#mode	xmmreg,mem64
+011001100000111100010110	movhpd #mode	mem64,xmmreg #revmachoperand
+
+// Move Low Packed Double-Precision Floating-Point Values
+011001100000111100010011	movlpd	#mode	xmmreg,mem64
+011001100000111100010010	movlpd #mode	mem64,xmmreg #revmachoperand
+
+// Extract Packed Double-Precision Floating-Point Sign Mask
+01100110000011110101000011	movmskpd	reg32,xmmreg
+
+// Move Scalar Double-Precision Floating-Point Values
+11110010000011110001000111	movsd		xmmreg,xmmreg #revmachoperand
+111100100000111100010001	movsd #mode	xmmreg,mem64
+11110010000011110001000011	movsd		xmmreg,xmmreg #revmachoperand
+111100100000111100010000	movsd #mode	mem64,xmmreg #revmachoperand
+
+// Move Unaligned Packed Double-Precision Floating-Point Values
+01100110000011110001000111	movupd		xmmreg,xmmreg #revmachoperand
+011001100000111100010001	movupd #mode	xmmreg,mem128
+01100110000011110001000011	movupd		xmmreg,xmmreg #revmachoperand
+011001100000111100010000	movupd #mode	mem128,xmmreg #revmachoperand
+
+// Multiply Packed Double-Precision Floating-Point Values
+01100110000011110101100111	mulpd		xmmreg,xmmreg
+011001100000111101011001	mulpd #mode	xmmreg,mem128
+
+// Multiply Scalar Double-Precision Floating-Point Values
+11110010000011110101100111	mulsd		xmmreg,xmmreg
+111100100000111101011001	mulsd #mode	xmmreg,mem64
+
+// Bitwise Logical OR of Double-Precision Floating-Point Values
+01100110000011110101011011	orpd		xmmreg,xmmreg
+011001100000111101010110	orpd #mode	xmmreg,mem128
+
+// Shuffle Packed Double-Precision Floating-Point Values
+01100110000011111100011011	shufpd		xmmreg,xmmreg,i8
+011001100000111111000110	shufpd #mode	xmmreg,mem128,i8
+
+// Compute Square Root of Packed Double-Precision Floating-Point Values
+01100110000011110101000111	sqrtpd		xmmreg,xmmreg
+011001100000111101010001	sqrtpd #mode	xmmreg,mem128
+
+// Compute Square Root of Scalar Double-Precision Floating-Point Values
+11110010000011110101000111	sqrtsd		xmmreg,xmmreg
+111100100000111101010001	sqrtsd #mode	xmmreg,mem64
+
+// Subtract Packed Double-Precision Floating-Point Values
+01100110000011110101110011	subpd		xmmreg,xmmreg
+011001100000111101011100	subpd #mode	xmmreg,mem128
+
+// Subtract Scalar Double-Precision Floating-Point Values
+11110010000011110101110011	subsd		xmmreg,xmmreg
+111100100000111101011100	subsd #mode	xmmreg,mem64
+
+// Unordered Compar Scalar Ordered Double-Precision Values and Set EFLAGS
+01100110000011110010111011	ucomisd		xmmreg,xmmreg
+011001100000111100101110	ucomisd #mode	xmmreg,mem64
+
+// Unpack and Interleave High Packed Double-Precision Floating-Point Values
+01100110000011110001010111	unpckhpd	xmmreg,xmmreg
+011001100000111100010101	unpckhpd #mode	xmmreg,mem128
+
+// Unpack and Interleave Low Packed Double-Precision Floating-Point Values
+01100110000011110001010011	unpcklpd	xmmreg,xmmreg
+011001100000111100010100	unpcklpd #mode	xmmreg,mem128
+
+// Bitwise Logical OR of Double-Precision Floating-Point Values
+01100110000011110101011111	xorpd		xmmreg,xmmreg
+011001100000111101010111	xorpd #mode	xmmreg,mem128
+
+// Move Doubleword
+01100110000011110110111011	movd		xmmreg,reg32
+01100110000011110110111011	movd		reg32,xmmreg #revmachoperand
+011001100000111101101110	movd #mode	xmmreg,mem32
+011001100000111101101110	movd #mode	mem32,xmmreg #revmachoperand
+
+// Move Aligned Double Quadword
+01100110000011110110111111	movdqa		xmmreg,xmmreg
+01100110000011110111111111	movdqa 		xmmreg,xmmreg #diasmonly // directive just to make it more predictable what the code assembles to
+011001100000111101101111	movdqa #mode	xmmreg,mem128
+011001100000111101111111	movdqa #mode	mem128,xmmreg #revmachoperand
+
+// Move Unaligned Double Quadword
+11110011000011110110111111	movdqu		xmmreg,xmmreg
+11110011000011110111111111	movdqu 		xmmreg,xmmreg #diasmonly // directive just to make it more predictable what the code assembles to
+111100110000111101101111	movdqu #mode	xmmreg,mem128
+111100110000111101111111	movdqu #mode	mem128,xmmreg #revmachoperand
+
+// Move Quadword from MMX to XMM Register
+11110011000011111101011011	movq2dq		xmmreg,mmreg
+
+// Move Quadword from XMM to MMX Register
+11110010000011111101011011	movq2dq		mmreg,xmmreg
+
+// Move Quadword
+// There are other movq instructions that were left out because I couldn't understand the Intel document. 
+011001100000111101111110	movq #mode	xmmreg,mem64
+011001100000111111010110	movq #mode	mem64,xmmreg #revmachoperand
+
+// Pack Dword to Word Data (signed with saturation)
+01100110000011110110101111	packssdw	xmmreg,xmmreg
+011001100000111101101011	packssdw #mode	xmmreg,mem128
+
+// Pack Word To Byte Data (signed with saturation)
+01100110000011110110001111	packsswb	xmmreg,xmmreg
+011001100000111101100011	packsswb #mode	xmmreg,mem128
+
+// Pack Word To Byte Data (unsigned with saturation)
+01100110000011110110011111	packuswb	xmmreg,xmmreg
+011001100000111101100111	packuswb #mode	xmmreg,mem128
+
+// Add Packed Quadword Integers
+000011111101010011		paddq		mmreg,mmreg
+0000111111010100		paddq #mode	mmreg,mem64
+01100110000011111101010011	paddq		xmmreg,xmmreg
+011001100000111111010100	paddq #mode	xmmreg,mem128
+
+// Add With Wrap-around
+//011001100000111111??11	padd
+
+// Add Signed With Saturation
+//.....				padds
+
+// Add Unsigned With Saturation
+//.....				paddus
+
+// Bitwise AND
+01100110000011111101101111	pand		xmmreg,xmmreg
+011001100000111111011011	pand #mode	xmmreg,mem128
+
+// Bitwise AndNot
+01100110000011111101111111	pandn		xmmreg,xmmreg
+011001100000111111011111	pandn #mode	xmmreg,mem128
+
+// Average Packed Integers
+01100110000011111110000011	pavgb		xmmreg,xmmreg
+011001100000111111100000	pavgb #mode	xmmreg,mem128
+
+// Average Packed Integers
+01100110000011111110001111	pavgw		xmmreg,xmmreg
+011001100000111111100011	pavgw #mode	xmmreg,mem128
+
+// Packed Compare For Equality
+//0110011000001111011101gg11 		// skipped because I don't understand the instruction format
+//....
+
+// Packed Compare For Equality
+//... skipped
+
+// Packed Compare Greater (signed)
+//.... skipped
+
+// Extract Word
+01100110000011111100010111	paxtrw	reg32,xmmreg,i8
+
+// Insert Word
+01100110000011111100010011	paxtrw		xmmreg,reg32,i8
+011001100000111111000100	paxtrw #mode	xmmreg,mem16,i8
+
+// Packed Multiply Add
+01100110000011111111010111	pmaddwd		xmmreg,xmmreg
+011001100000111111110101	pmaddwd	#mode	xmmreg,mem128
+
+// Maximum of Packed Signed Word Integers
+01100110000011111110111011	pmaxsw		xmmreg,xmmreg
+011001100000111111101110	pmaxsw	#mode	xmmreg,mem128
+
+// Maximum of Packed Unsigned Byte Integers
+01100110000011111101111011	pmaxub		xmmreg,xmmreg
+011001100000111111011110	pmaxub	#mode	xmmreg,mem128
+
+// Minimum of Packed Signed Word Integers
+01100110000011111110101011	pminsw		xmmreg,xmmreg
+011001100000111111101010	pminsw	#mode	xmmreg,mem128
+
+// Minimum of Packed Unsigned Byte Integers
+01100110000011111101101011	pminub		xmmreg,xmmreg
+011001100000111111011010	pminub	#mode	xmmreg,mem128
+
+// Move Byte Mask To Integer
+01100110000011111101011111	pmovmskb	reg32,xmmreg
+
+// Packed Multiplication, store high word(unsigned)
+000011111110010011		pmulhuw		mmreg,mmreg
+0000111111100100		pmulhuw	#mode	mmreg,mem64
+01100110000011111110010011	pmulhuw		xmmreg,xmmreg
+011001100000111111100100	pmulhuw	#mode	xmmreg,mem128
+
+// Packed Multiplication, store high word
+01100110000011111110010111	pmulhw		xmmreg,xmmreg
+011001100000111111100101	pmulhw #mode	xmmreg,mem128
+
+// Packed Multiplication, store low word
+01100110000011111101010111	pmullw		xmmreg,xmmreg
+011001100000111111010101	pmullw #mode	xmmreg,mem128
+
+// Multiply Packed Unsigned Doubleword Integers
+000011111111010011		pmuludq		mmreg,mmreg
+0000111111110100		pmuludq	#mode	mmreg,mem64
+01100110000011111111010011	pmuludq		xmmreg,xmmreg
+011001100000111111110100	pmuludq	#mode	xmmreg,mem128
+
+// Bitwise Or
+01100110000011111110101111	por		xmmreg,xmmreg
+011001100000111111101011	por #mode	xmmreg,mem128
+
+// Compute Sum of Absolute Differences
+01100110000011111111011011	psadbw		xmmreg,xmmreg
+011001100000111111110110	psadbw	#mode	xmmreg,mem128
+
+// Shuffle Packed Low Words
+11110010000011110111000011	pshuflw		xmmreg,xmmreg,i8
+111100100000111101110000	pshuflw	#mode	xmmreg,mem128,i8
+
+// Shuffle Packed High Words
+11110011000011110111000011	pshufhw		xmmreg,xmmreg,i8
+111100110000111101110000	pshufhw	#mode	xmmreg,mem128,i8
+
+// Shuffle Packed Doublewords
+01100110000011110111000011	pshufd		xmmreg,xmmreg,i8
+011001100000111101110000	pshufd	#mode	xmmreg,mem128,i8
+
+// Shift Double Quadword Left Logical
+01100110000011110111001111111	pslldq		xmmreg,i8
+
+// Packed Shift Left Logical
+//... skipped
+
+
+// Packed Shift Right Arithmetic
+//.... skipped
+
+// Shift Double Quadword Right Logical
+01100110000011110111001111011		psrldq	xmmreg,i8
+
+// Packed Shift Right Logical
+//.... skipped
+
+// Subtract Packed Quadword Integers
+000011111111101111		psubq		mmreg,mmreg
+0000111111111011		psubq	#mode	mmreg,mem64
+01100110000011111111101111	psubq		xmmreg,xmmreg
+011001100000111111111011	psubq	#mode	xmmreg,mem128
+
+// Subtract With Wrap-around
+//... skipped psub
+
+// Subtract Signed With Saturation
+//... skipped psubs
+
+// Subtract Unsigned With Saturation
+//... skipped psubus
+
+//Unpack High Data To Next Larger Type
+//... skipped punckh
+
+// Unpack High Data
+01100110000011110110110111	punpckhqdq		xmmreg,xmmreg
+011001100000111101101101	punpckhqdq #mode	xmmreg,mem128
+
+// Unpack Low Data To Next Larger Type
+//... skipped punpckl
+
+// Unpack Low Data
+01100110000011110110110011	punpcklqdq		xmmreg,xmmreg
+011001100000111101101100	punpcklqdq #mode	xmmreg,mem128
+
+// Bitwise Xor
+01100110000011111110111111	pxor		xmmreg,xmmreg
+011001100000111111101111	pxor #mode	xmmreg,mem128
+
+// Store Selected Bytes of Double Quadword
+01100110000011111111011111	maskmovdqu	xmmreg,xmmreg
+
+// Flush Cache Line
+//0000111110101110	clflush #mode mem8 // commented out because this won't make a multiple of 8 bits of machine code
+
+// Store Packed Double-Precision Floating-Point Values Using Non-Temporal Hint
+011001100000111100101011	movntpd	#mode	mem128,xmmreg #revmachoperand
+
+// Store Double	Quadword Using Non-Temporal Hint
+011001100000111111100111	movntdq	#mode	mem128,xmmreg #revmachoperand
+
+// Store Doubleword Using Non-Temperal Hint
+0000111111000011	movnti	#mode	mem32,reg32
+
+// Spin Loop Hint
+1111001110010000	pause
+
+// Load Fence
+000011111010111011101000	lfence
+
+// Memory Fence
+000011111010111011110000	mfence
+

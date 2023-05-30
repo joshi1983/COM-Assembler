@@ -1,0 +1,10 @@
+// The 1 instruction added with the Pentium Family of processors
+
+#colour AFAFFFh
+
+#include <x86 32-bit instruction set.txt> // 32-bit instructions and the defining of reg32
+
+#opcodes
+
+// Compare and Exchange 8 Bytes
+0000111111000111	cmpxch8b #mode+001	mem64

@@ -1,0 +1,128 @@
+// stores MMX instructions
+// This data compilation is copyrighted by the developer of the assembler, Josh G.  All rights are reserved.
+// Look at the following web site for information about the mmx and SIMD technology.
+// http://www.microsoft.com/mind/0997/mmx.asp
+
+
+// Some instructions were skipped.
+
+#include <x86 32-bit instruction set.txt> // defines reg32
+
+#colour 8080FFh
+
+#symbols
+
+000 	mm0
+001 	mm1
+010 	mm2
+011 	mm3
+100 	mm4
+101 	mm5
+110 	mm6
+111 	mm7
+
+#defines
+mmreg =  mmreg0,mmreg1,mmreg2,mmreg3,mmreg4,mmreg5,mmreg6,mmreg7
+
+#opcode
+
+// Empty MMX techology state
+0000111101110111	emms
+
+// Move doubleword
+000011110110111011	movd		mmreg,reg32
+000011110111111011	movd		reg32,mmreg #revmachoperand
+0000111101101110	movd #mode	mmreg,mem32
+0000111101111110	movd #mode	mem, mmreg #revmachoperand
+
+// Move quadword
+000011110110111111	movq		mmreg,mmreg #diasmonly // diasmonly to make the assembled machine code more predictable
+000011110111111111	movq		mmreg,mmreg
+0000111101101111	movq #mode	mmreg,mem64 
+0000111101111111	movq #mode	mem64,mmreg #revmachoperand
+
+// Pack dword to word data (signed with saturation)
+000011110110101111	packssdw	mmreg,mmreg
+0000111101101011	packssdw #mode	mmreg,mem64
+
+// Pack word to byte data (signed with saturation)
+000011110110001111	packsswb	mmreg,mmreg
+0000111101100011	packsswb #mode	mmreg,mem64
+
+// Pack word to byte data(unsigned with saturation)
+000011110110011111	packuswb	mmreg,mmreg
+0000111101100111	packuswb #mode	mmreg,mem64
+
+// Add with wrap-around
+//00001111111111gg11	padd...
+//.... skipped		padd
+
+// Add signed with saturation
+//.... skipped 	padds
+
+// Add unsigned with saturation
+//..... skipped
+
+// Bitwise And
+000011111101101111	pand		mmreg,mmreg
+0000111111011011	pand #mode	mmreg,mem64
+
+// Bitwise AndNot
+000011111101111111	pandn		mmreg,mmreg
+0000111111011111	pandn #mode	mmreg,mem64
+
+// Packed compare for equality
+//00001111011101gg11	pcmpeq
+//..... skipped
+
+// Packed compare greater (signed)
+//... skipped pcmpgt
+
+// Packed multiply add
+000011111111010111	pmaddwd		mmreg,mmreg
+0000111111110101	pmaddwd #mode	mmreg,mem64
+
+// Packed multiplication, store high word (unsigned)
+000011111110010011	pmullhuw		mmreg,mmreg
+0000111111100100	pmullhuw #mode	mmreg,mem64
+
+// Packed multiplication, store high word
+000011111110010111	pmulhw		mmreg,mmreg
+0000111111100101	pmulhw #mode	mmreg,mem64
+
+// Packed multiplication, store low word
+000011111101010111	pmullw		mmreg,mmreg
+0000111111010101	pmullw #mode	mmreg,mem64
+
+// Bitwise Or
+000011111110101111	por		mmreg,mmreg
+0000111111101011	por #mode	mmreg,mem64
+
+// Packed shift left logical
+//00001111111100gg11 psll2
+//.... skipped
+
+// Packed shift right arithmetic
+//.... skipped
+
+// Packed shift right logical
+//... skipped psrl
+
+// Subtract with wrap-around
+//.... skipped psub
+
+// Subtract signed with saturation
+//... skipped psubs
+
+// Subtract unsigned with saturation
+//.... skipped psubus
+
+// Unpack high data to next larger type
+//... skipped punckh
+
+// Unpack low data to next larger type
+//... skipped punckl
+
+// Bitwise Xor
+000011111110111111		pxor		mmreg,mmreg
+0000111111101111		pxor #mode	mmreg,mem64

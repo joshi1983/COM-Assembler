@@ -1,0 +1,100 @@
+// The 1 instruction added with the Pentium Family of processors
+
+#colour AFAFFFh
+
+#include <x86 32-bit instruction set.txt> // 32-bit instructions and the defining of reg32
+#include <FPU instruction set.txt> // fpu instructions including a definition of stck
+
+#opcodes
+
+// Conditional Move
+000011110100011111	cmova reg16,reg16
+000011110100001111	cmovae reg16,reg16
+000011110100001011	cmovb reg16,reg16
+000011110100011011	cmovbe reg16,reg16
+000011110100001011	cmovc reg16,reg16 // same as cmovb
+000011110100010011	cmove reg16,reg16
+000011110100111111	cmovg reg16,reg16
+000011110100110111	cmovge reg16,reg16
+000011110100110011	cmovl reg16,reg16
+000011110100111011	cmovle reg16,reg16
+000011110100011011	cmovna reg16,reg16 // same as cmovge, cmovbe
+000011110100001011	cmovnae reg16,reg16 // same as cmovb, cmovc
+000011110100001111	cmovnb reg16,reg16
+000011110100011111	cmovnbe reg16,reg16
+000011110100001111	cmovnc reg16,reg16 // same as cmovnc
+000011110100010111	cmovne reg16,reg16
+000011110100111011	cmovng reg16,reg16 // same as cmovle
+000011110100110011	cmovnge reg16,reg16 // same as cmovl
+000011110100110111	cmovnl reg16,reg16 // same as cmovge
+000011110100111111	cmovnle reg16,reg16 // same as cmovg
+
+000011110100000111	cmovno reg16,reg16
+000011110100101111	cmovnp reg16,reg16
+000011110100100111	cmovns reg16,reg16
+000011110100010111	cmovnz reg16,reg16
+000011110100000011	cmovno reg16,reg16
+000011110100101011	cmovp reg16,reg16
+000011110100101011	cmovpe reg16,reg16 // same as cmovp
+000011110100101111	cmovpo reg16,reg16 // same as cmovnp
+000011110100100011	cmovs reg16,reg16
+000011110100010011	cmovp reg16,reg16
+
+
+0000111101000111	cmova #mode reg16,mem16
+0000111101000011	cmovae #mode reg16,mem16
+0000111101000010	cmovb #mode reg16,mem16
+0000111101000110	cmovbe #mode reg16,mem16
+0000111101000010	cmovc #mode reg16,mem16 // same as cmovb
+0000111101000100	cmove #mode reg16,mem16
+0000111101001111	cmovg #mode reg16,mem16
+0000111101001101	cmovge #mode reg16,mem16
+0000111101001100	cmovl #mode reg16,mem16
+0000111101001110	cmovle #mode reg16,mem16
+0000111101000110	cmovna #mode reg16,mem16 // same as cmovge, cmovbe
+0000111101000010	cmovnae #mode reg16,mem16 // same as cmovb, cmovc
+0000111101000011	cmovnb #mode reg16,mem16
+0000111101000111	cmovnbe #mode reg16,mem16
+0000111101000011	cmovnc #mode reg16,mem16 // same as cmovnc
+0000111101000101	cmovne #mode reg16,mem16
+0000111101001110	cmovng #mode reg16,mem16 // same as cmovle
+0000111101001100	cmovnge #mode reg16,mem16 // same as cmovl
+0000111101001101	cmovnl #mode reg16,mem16 // same as cmovge
+0000111101001111	cmovnle #mode reg16,mem16 // same as cmovg
+
+0000111101000001	cmovno #mode reg16,mem16
+0000111101001011	cmovnp #mode reg16,mem16
+0000111101001001	cmovns #mode reg16,mem16
+0000111101000101	cmovnz #mode reg16,mem16
+0000111101000000	cmovno #mode reg16,mem16
+0000111101001010	cmovp #mode reg16,mem16
+0000111101001010	cmovpe #mode reg16,mem16 // same as cmovp
+0000111101001011	cmovpo #mode reg16,mem16 // same as cmovnp
+0000111101001000	cmovs #mode reg16,mem16
+0000111101000100	cmovp #mode reg16,mem16
+
+// Conditional move on EFLAGS condition codes
+1101101011000		fcmovb		stck		// 2 bytes
+1101101011001		fcmove		stck		// 2 bytes
+1101101011010		fcmovbe		stck		// 2 bytes
+1101101011011		fcmovu		stck		// 2 bytes
+
+1101101011101001	fucompp				// 2 bytes
+
+1101101111000		fcmovnb		stck		// 2 bytes
+1101101111001		fcmovne		stck		// 2 bytes
+1101101111010		fcmovnbe	stck		// 2 bytes
+1101101111011		fcmovnu		stck		// 2 bytes
+
+// Compare Real and Set Flags
+1101101111110		fcomi	stck
+
+// Restore x87 FPU, MMX, SSE, and SSE2 state
+//000011111010111001	fxrstor	mem512
+
+// Save x87 FPU, MMX, SSE, and SSE2 state
+//000011111010111000	fxsave	mem512
+// The instructions above were commented out because I can't see how they can make a multiple of 8 bits of machine code.
+
+0000111100110100	sysenter			// Fast call to privilege level 0 system procedures
+0000111100110101	sysexit				// Fast return to privilege level 3 user code

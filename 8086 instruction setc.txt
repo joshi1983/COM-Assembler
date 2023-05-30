@@ -1,0 +1,518 @@
+//    ####################################### #####  ###  ##  #   #     #       #        #  
+//   #          I n t e l - P e n t i u m   P r o c e s s o r   I n s t r u c t i o n    S e t
+//  #       W r i t t e n   b y   D r e q   ( h t t p : / / d i g i t a l n e o . d y n u . c o m / )
+// ####################################### #####  ###  ##  #   #     #       #        #  
+
+// this file is loaded by the assembler to get information on converting assembly instructions
+// 8086 assembly / machine code translation
+
+// This file is the instruction set as documented by intel for the Pentium microprocessors
+
+#include <FPU instruction set.txt>
+
+#symbols
+
+// Binary |	register	 
+
+
+// 32 bit registers (when w = 0) ala 8bit
+000		al
+001		cl
+010		dl
+011		bl
+100		ah
+101		ch
+110		dh
+111		bh
+
+// 32 bit registers (when w=1) ala 32bit
+000		eax
+001		ecx
+010		edx
+011		ebx
+100		esp
+101		ebp
+110		esi
+111		edi
+
+
+// 16 bit registers (when w=0) ala 8bit
+000		al
+001		cl
+010		dl
+011		bl
+100		ah
+101		ch
+110		dh
+111		bh
+
+
+// 16 bit registers (when w=1) ala 16bit
+000		ax
+001		cx
+010		dx
+011		bx
+100		sp
+101		bp
+110		si
+111		di
+
+// _reg16, some instructions refer to a 16 bit register with a 2 bit value excluding the registers (sp, bp, si, di)
+00		_ax
+01		_cx
+10		_dx
+11		_bx
+// These refer to ax, bx, cx, dx but just use 2 bit values instead.  These are used in some opcodes like xchg _reg16, _reg16
+
+
+// segment registers
+00111		es
+01111		cs
+10111		ss
+11111		ds
+
+// Encoding of conditional test fields (tttn)
+0000		O		// Overflow
+0001		NO		// No Overflow
+0010		B		// Below, Not above or equal
+0010		NAE
+0011		NB		// Not below, Above or equal
+0011		AE
+0100		E		// Equal, Zero
+0100		Z
+0101		NE		// Not equal, Not zero
+0101		NZ
+0110		BE		// Below or equal, Not above
+0110		NA
+0111		NBE		// Not below or equal, Above
+0111		A
+1000		S		// Sign
+1001		NS		// Not sign
+1010		P		// Parity, Parity Even
+1010		PE
+1011		NP		// Not parity, Parity Odd
+1011		PO
+1100		L 		// Less than, Not greater than or equal to
+1100		NGE
+1101		NL 		// Not less than, Greater than or equal to
+1101		GE
+1110		LE		// Less than or equal to, Not greater than
+1110		NG
+1111		NLE 		// Not less than or equal to, Greater than
+1111		G
+
+#defines
+
+reg8 = al, bl, cl, dl, ah, bh, ch, dh
+reg16 = ax, bx, cx, dx, sp, bp, si, di
+_reg16 = _ax, _bx, _cx, _dx  
+seg = es, cs, ss, ds 
+
+// i8 and i16 are defined in the assembler program
+// mem8 and mem16 are undefined at present
+
+// i8 -> 8 bit immediate value
+// i16 -> 16 bit immediate value
+// for i16, the bytes need to be swapped.  This is automatically done by the assembler.
+// reg8 -> 8 bit register
+// reg16 -> 16 bit register
+// mem8 -> address to an 8 bit variable
+// mem16 -> address to a 16 bit variable
+
+#opcode // indicate beginning of opcode definitions
+
+// Please note that as of now, I ommit the following:
+// 1] Any function that reverses the previous function.. ala (reg1->reg2)   ommit (reg1<-reg2) code
+//     Of course any operation will take the first opperand, and do it to the second one.
+
+
+//    ####################################### #####  ###  ##  #   #     #       #        #  
+//   #          I n t e l - P e n t i u m   P r o c e s s o r   I n s t r u c t i o n    S e t
+//  #                                  O p c o d e   D e f i t i n i t i o n s
+// ####################################### #####  ###  ##  #   #     #       #        #  
+
+// Binary |		opcode | 	operands |	machine code size
+
+00110111		aaa				// AAA - ASCII Adjust after Addition
+1101010100001010	aad				// AAD - ASCII Adjust AX before Division
+1101010000001010	aam				// AAM - ASCII Adjust AX after Multiply
+00111111		aas				// AAS - ASCII Adjust AL after Subtraction
+
+// ADC - ADD with Carry
+0001000011		adc		reg8,reg8		// 1 byte - adds register 1 to register 2 with carry
+0001000111		adc		reg16,reg16	// 2 byte - adds register 1 to register 2 with carry
+00010010		adc		mem8,reg8	// 1 byte - adds memory to register with carry
+00010011		adc		mem16,reg16	// 2 byte - adds memory to register with carry
+00010000		adc		reg8,mem8	// 1 byte- adds register to memory with carry
+00010001		adc		reg16,mem16	// 2 byte- adds register to memory with carry
+1000000011010		adc		reg8,i8
+1000000111010		adc		reg16,i16	
+1000001011010		adc		reg8,i16
+1000001111010		adc		reg16,i8
+
+// ADD - Add
+0000000011		add		reg8,reg8		// 1 byte - adds register 1 to register 2
+0000000111		add		reg16,reg16	// 2 bytes - adds register 1 to register 2
+00000010		add		mem8,reg8	// 1 byte - adds memory to register
+00000011		add		meg16,reg16	// 2 bytes - adds memory to register
+00000000		add		reg8,mem8	// 1 byte - adds register to memory
+00000001		add		reg16,mem16	// 2 bytes - adds register to memory
+10000000		add		i8,reg8		// 1 byte - adds imm to register (no fill)
+10000001		add		i16,reg16		// 2 bytes - adds imm to register (no fill)
+10000010		add		i8,reg16		// ? bytes - adds imm to reg (with fill)
+10000011		add		i16,reg8		// ? bytes - adds imm to reg (with fill)
+00000100		add		i8
+00000101		add		i16
+
+
+// AND - Logical AND
+0010000011		and		reg8,reg8		// 1 byte - ANDs regster 1 to register 2
+0010000111		and		reg16,reg16	// 2 bytes - ANDs regster 1 to register 2
+00100010		and		mem8,reg8	// 1 byte - ANDs memory to register
+00100011		and		mem16,reg16	// 2 bytes - ANDs memory to register
+00100000		and		reg16,mem16
+00100000		and		reg16,mem16
+1000000011100		and		reg8,i8
+1000000111100		and		reg16,i16
+1000001011100		and		reg8,i16
+1000001111100		and		reg16,i8
+00100100		and		i8
+00100101		and		i16
+
+
+// ARPL - Adjust RPL Field of Selector
+//0110 0011 11 [reg1] [reg2]					// ARPL from register
+//0110 0011  [reg]						// ARPL from memory
+
+//0110 0010 mod reg r/m					// BOUND - Check Array Against Bounds
+
+
+// BSF - Bit Scan Foward
+000011110000111111	bsf		reg8,reg8		// 1 byte - BSFs register 1 to register 2
+0000111110111100	bsf		reg8,mem8	// 1 byte - BSFs memory to register
+
+
+///BSR - Bit Scan Reverse
+000011111011110111	bsr		reg8,reg8
+0000111110111101	bsr		reg8,mem8
+
+
+// BT - Bit Test
+00001111101110101100	bt		reg8,i8
+//0000111110111010	
+000011111010001111	bt		reg8,reg8
+0000111110100011	bt		reg8,mem8
+
+
+// CALL - Call Procedure (In same segment)
+11101000		call		i16 
+1111111111010		call		reg8
+111111110010		call		mem8
+
+10011000		cbw				// CBW - Convert Byte to Word
+10011001		cdq				// CDQ - Convert Doubleword to Qword
+11111000		clc				// CLC - Clear Carry Flag
+11111100		cld				// CLD - Clear Direction Flag
+11111010		cli				// CLI - Clear Interrupt Flag
+0000111100000110	clts				// CLTS - Clear Task-Switched Flag in CR0
+11110101		cmc				// Complement Carry Flag
+
+// CMP - Compare Two Operands
+0011100011		cmp		reg8,reg8
+0011100111		cmp		reg16,reg16
+
+// CMPXCHG - Compare and Exchange
+0000111110110000	cmpxchg		reg8,reg8
+0000111110110001	cmpxchg		reg16,reg16
+
+0000111110100010	cpuid				// CPUID - CPU Identification
+10011001		cwd				// CWD - Convert Word to Doubleword
+10011000		cwde				// CWDE - Convert Word to Double Word
+00100111		daa				// DAA - Decimal Adjust AL after Addition
+00101111		das				// DAS - Decimal Adjust AL after Subtraction
+
+// DEC - Decrement by 1
+1111111011001		dec		reg8
+1111111111001		dec		reg16
+01001			dec		reg8		// Alternate Code
+
+// DIV - Unsigned Divide
+1111011011110		div		reg8
+1111011111110		div		reg16
+
+11110100		hlt				// HLT - Hault	
+
+// IDIV - Signed Divide
+1111011011111		idiv		reg8
+1111011111111		idiv		reg16
+
+// IMUL - Signed Multiply
+1111011011101		imul		reg8
+1111011111101		imul		reg16
+000011111010111111	imul		reg8,reg8
+
+// IN - Input From Port
+11100100		in		i8
+11100101		in		i16
+//1119110			in
+//1101101			in
+
+
+// INC - Increment by 1
+1111111011000		inc		reg8
+1111111111000		inc		reg16
+01000			inc		reg8		// Alternate code
+01101100		ins				// INS - Input from DX Port
+01101101		insl				// INSL - Input from DX Port (long) [NON STANDARD CODE!]
+
+11001101		int		i8		// INT - Interrupt
+//11001100		int				// INT - Single-Step Interrupt 3
+//11001110		into				// INTO - Interrupt 4 on Overflow
+
+0000111100001000	invd				// INVD - Invalidate Cache
+11001111		iret,iretd				// IRET/IRETD - Interrupt Return
+
+// JMP - Uncoditional Jump (to same segment)
+11101011		jmp		i8
+11101001		jmp		i16
+1111111111100		jmp		reg8
+
+
+// JMP - Uncoditional
+11101010		jmp		i16,i8		// ?
+
+10011111		lahf				// LAHF -  Load Flags into AHRegister
+
+// LAR - Load Access Rights Byte
+0000111100000010 11	lar		reg8,reg8
+
+11001001		leave				// LEAVE - High Level Procedure Access
+
+// LMSW - Load Machine Status World
+000011110000000111110	lmsw		reg8
+
+11110000		lock				// LOCK - Assert LOCK# Signal Prefix
+10101100		lods,lodsb,lodsw,lodsd		// Load String Operands
+11100010		loop		i8		// LOOP - Loop Count
+11100001		loopz,loope	i8		// Loop Count while Zero/Equal
+11100000		loopnz,loopne	i8		// Loop Count while not Zero/Equal
+
+// LSL - Load Segment Limit
+000011110000001111	lsl		reg8,reg8
+
+// LTR - Load Task Register
+000011110000000011011	ltr	reg8
+
+// MOV - Move Data
+1000100011		mov		reg8,reg8		// 1 byte - Move data from reg1 to reg2
+1000100111		mov		reg16,reg16	// 2 bytes - Move data from reg1 to reg2
+10001010		mov		mem8,reg8	// 1 byte - Move data from mem to reg
+10001011		mov		mem16,reg16	// 2 bytes - Move data from mem to reg
+10001000		mov		reg8,mem8	// 1 byte - Move data from reg to mem
+10001001		mov		reg16,mem16	// 1 byte - Move data from reg to mem
+1100011011000		mov		reg8,i8		// 1 byte
+1100011111000		mov		reg16,i16		// 2 bytes
+//11000110		mov		i8,mem8
+//11000111		mov		i16,mem16
+
+
+// MOV - Move to/from Controll Registers
+000011110010001011000	movtf		reg8		// CR0 register
+000011110010001011010	movtf		reg8		// CR2 register
+000011110010001011011	movtf		reg8		// CR3 register
+000011110010001011100	movtf		reg8		// CR4 register
+
+
+10100100		movs,movsb,movsw,movsd		// Move data from string to string
+
+// MOVSX - Move with Sign-Extend
+000011111011111011	movsx		reg8
+000011111011111111	movsx		reg16
+
+// MUL - Unsigned Multiply
+1111011011100		mul		reg8
+1111011111100		mul		reg16
+
+
+10010000		nop				// NOP - No Operation
+
+// OR - Logical Inclusive OR
+0000100011		or		reg8,reg8
+0000100111		or		reg16,reg16
+1000000011001		or		reg8,i8
+1000000111001		or		reg16,i16
+1000001011001		or		reg16,i8
+10000011110001		or		reg16,i8
+00001100		or		reg8
+00001101		or		reg16
+
+// OUT - Output to Port
+11100110		out		i8
+11100111		out		i16
+
+// POP - Pop a Word from the Stack
+1000111111000		pop		reg8
+01011			pop		reg8		// Alternate code
+
+01100001		popa,popad			// Pop All General Registers
+10011101		popf,popfd			// Pop Stack into FLAGS or EFLAGS Register
+
+
+// PUSH - Push Operand onto the Stack
+1111111111110		push		reg8
+01010			push		reg8		// Alternate code
+01101010		push		i8
+01101000		push		i16
+
+
+01100000		pusha,pushad			// Push All General Registers
+10011100		pushf,pushfd			// Push Flags Rester onto the Stack
+
+
+// RCL - Rotate thru Carry Left
+1101000011010		rcl		reg8
+1101000111010		rcl		reg16
+
+
+// RCR - Rotate thru Carry Right
+1101000011011		rcr		reg8
+1101000111011		rcr		reg16
+
+0000111100110010	rdmsr				// RDMSR - Read from Model-Specific Register
+0000111100110011	rdpmc				// RDPMC - Read Performance Monitoring Counters
+0000111100110001	rdtsc				// RDTSC 0 Real Time-Stamp Counter
+1111001101101100	repins				// Input String (8 bit)
+1111001101101101	repinsd				// Input String (16 bit) !NOT STANDARD!
+1111001110101100	replods				// Load String
+1111001110101101	replodsd
+1111001110100100	repmovs				// Move String
+1111001110100101	repmovsd
+1111001101101110	repouts				// Output String
+1111001101101111	repoutsd
+1111001110101010	repstos				// Store String
+1111001110101011	repstosd
+1111001110100110	repecmps			// Compare String
+1111001110100111	repecmpsd
+1111001110101110	repescas				// Scan String
+1111001110101111	repescasd
+1111001010100110	repnecmps			// Compare String
+1111001010100111	repnecmpsd
+1111001010101110	repnescas			// Scan String
+1111001010101111	repnescasd
+
+
+// RET - Return from Procedure (to same segment)
+11000011		ret
+11000010		ret		i16
+
+// RET - Return from Procedure (to other segment)
+11001011		reto
+11001010		reto		i16
+
+
+// ROL - Rotate Left
+1101000011000		rol		reg8
+1101000111000		rol		reg16
+
+
+// ROR - Rotate Right
+1101000011001		ror		reg8
+1101000111001		ror		reg16
+
+0000111110101010	rsm				// RSM - Resume from System Management Mode
+10011110		sahf				// SAHF - Store AH into Flags
+
+//  SAR - Shift Arithmetic Right
+1101000011111		sar		reg8
+1101000111111		sar		reg16
+
+// SBB - Integer Subtraction with Borrow
+0001100011		sbb		reg8,reg8
+0001100111		sbb		reg16,reg16
+
+
+10101110		scas				// Scan String (8bit)
+10101111		scasd				// Scan String (16bit)
+
+// SHL - Shift Left
+1101000011100		shl		reg8
+1101000111100		shl		reg16
+
+// SAR - Shift Right
+1101000011101		sar		reg8
+1101000111101		sar		reg16
+
+// SLDT - Store Local Descriptor Table Register
+000011110000000011000	sldt		reg8
+
+// SMSW - Store Machine Status Word
+000011110000000111100	smsw		reg8
+
+11111001		stc				// STC - Set Carry Flag
+11111101		std				// STD - Set Direction Flag
+11111011		sti				// STI - Set Interrupt Flag
+10101010		stos				// Store String Data (8-bit)
+10101011		stosd				// Store String Data (16-bit)
+
+
+// STR - Store Task Register
+000011110000000011001	str		reg8
+
+
+// SUB - Intiger Subtraction
+0010100011		sub		reg8,reg8
+0010100111		sub		reg16,reg16
+00101100		sub		i8
+00101101		sub		i16
+
+
+// TEST - Logical Compare
+1000010011		test		reg8,reg8
+1000010111		test		reg16,reg16
+1111011011000		test		reg8,i8
+1111011111000		test		reg16,i16
+10101000		test		i8
+10101001		test		i16
+
+
+// VERR - Verify a Segment for Reading
+000011110000000011100	verr		reg8
+
+
+// VERW - Verify a Segment for Writing
+000011110000000011101	verw		reg8
+
+
+10011011		wait				// WAIT - Wait
+0000111100001001	wbinvd				// WBINVD - Writeback and Invalidate Data Cache
+0000111100110000	wrmsr				// WRMSR - Write to Model-Specific Register
+
+
+// XADD - Exchange and Add
+000011111100000011	xadd		reg8,reg8
+000011111100000111	xadd		reg16,reg16
+
+
+// XCHG - Exchange Register/Memory with Register
+1000011011		xchg		reg8,reg8
+1000011111		xchg		reg16,reg16
+
+11010111		xlat,xlatb				// Table Look-up Translation
+
+// XOR - Logical Exclusive OR
+0011000011		xor		reg8,reg8
+0011000111		xor		reg16,reg16
+
+
+//    ####################################### #####  ###  ##  #   #     #       #        #  
+//   #                       E x t e n d e d   I n s t r u c t i o n   S e t s
+//  #                             M a k e s   T h i n g s   E a s i e r
+// ####################################### #####  ###  ##  #   #     #       #        #  
+
+
+
+
+
+
+#examples: // indicate that the following information is ignored by the assembler
+// this section is to help you understand how the process works.

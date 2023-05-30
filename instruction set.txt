@@ -1,0 +1,7 @@
+// this file is used to include the other instruction set files that store the complete instruction set used by MyAssembler
+
+#include <8086 instruction set.txt>
+
+// #include <FPU instruction set.txt> // include this if you want to use floating point instructions
+
+#include <x86 32-bit instruction set.txt>

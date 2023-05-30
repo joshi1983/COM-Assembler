@@ -1,0 +1,22 @@
+// AMD 3DNow instructions
+
+#colour 6060FFh
+
+#include <MMX instructions.txt> // defines mmreg
+
+#opcodes
+
+
+
+#examples
+
+
+from http://x86.ddj.com/articles/3dnow/amd_3dnow.htm
+		.model	small
+		.586
+                .k3d
+                .code
+		pf2iw	mm0, mm1 ; 1C
+		pi2fd	mm0, mm1 ; 0C
+		pswapw	mm0, mm1 ; BB
+		end

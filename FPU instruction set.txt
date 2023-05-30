@@ -1,0 +1,130 @@
+// FPU instructions for Intel x86 processor
+
+#colour FFB0FFh // used if and when the opcode list is outputted to html to help separate these instructions from the rest
+
+#symbols
+
+000	st0
+001	st1
+010	st2
+011	st3
+100	st4
+101	st5
+110	st6
+111	st7 
+
+#defines
+
+stck = st0, st1, st2, st3, st4, st5, st6, st7
+
+#opcodes
+
+// binary |		opcode |			size
+
+10011011		fwait				// same machine code as retf
+
+100110111101101111100001	fdisi			// disable interupts
+1001101111100001	fndisi				
+
+1101100111000		fld	stck			// 2 bytes
+1101100111001		fxch	stck			// 2 bytes
+
+
+1101101111100011	finit				// 2 bytes, Initialize FPU after checking for pending unmasked floating-point exceptions
+
+1101100000000		fadd	memf			// 4 bytes
+1101100000100		fsub	memf			// 4 bytes
+
+1101100100000		fld	memf			// 4 bytes
+1101100100011		fstp	memf			// 4 bytes
+
+1101100111000		fld	stck			// 2 bytes, from Intel reference
+
+1101100111010000	fnop				// 2 bytes
+
+
+
+1101100111100000	fchs				// 3 bytes
+1101100111100001	fabs				// 2 bytes
+
+
+1101100111100100	ftst				// 2 bytes, compare with 0.0
+1101100111100101	fxam				// 2 bytes, examine
+
+1101100111101000	fld1				// 2 bytes
+1101100111101001	fldl2t				// 2 bytes, load the base 10 log of 2
+1101100111101010	fldL2e				// 2 bytes, load natural log of 2
+1101100111101011	fldpi				// 2 bytes, load pi
+
+1101100111101100	fldlg2				// 2 bytes, load log of 2
+1101100111101101	fldln2				// 2 bytes
+
+1101100111101110	fldz				// 2 bytes
+
+1101100111110000	f2xm1				// 2 bytes
+1101100111110001	fyL2x				// 2 bytes
+
+1101100111110010	fptan				// 2 bytes
+1101100111110011	fpatan				// 2 bytes
+1101100111110100	fxtract				// 2 bytes
+1101100111110101	fprem1				// 2 bytes
+1101100111110110	fDecStp				// 2 bytes
+1101100111110111	fIncStp				// 2 bytes
+
+1101100111111000	fprem				// 2 bytes, partial remander
+
+1101100111111001	fyL2XP1				// 2 bytes, ST(1) * log2 (ST(0)+1.0)
+
+1101100111111100	fRndInt				// 2 bytes, round to integer
+
+1101100111111010	fSqrt				// 2 bytes
+1101100111111011	fSinCos				// 2 bytes
+1101100111111101	fScale				// 2 bytes, scale st0 by st1
+1101100111111110	fSin				// 2 bytes
+1101100111111111	fCos				// 2 bytes
+
+1101101011000		fcmovb		stck		// 2 bytes
+1101101011001		fcmove		stck		// 2 bytes
+1101101011010		fcmovbe		stck		// 2 bytes
+1101101011011		fcmovu		stck		// 2 bytes
+
+1101101011101001	fucompp				// 2 bytes
+
+1101101111000		fcmovnb		stck		// 2 bytes
+1101101111001		fcmovne		stck		// 2 bytes
+1101101111010		fcmovnbe	stck		// 2 bytes
+1101101111011		fcmovnu		stck		// 2 bytes
+100110111101101111100000	feni			// 3 bytes
+
+1101101111100010	fnclex				// 2 bytes
+1101101111100100	fSetPm				// 2 bytes
+
+1101101111110		fcomi		stck		// 2 bytes
+1101101111100011	fninit				// 2 bytes, Initialize FPU without checking for pending unmasked floating-point exceptions
+
+1101100011101		fsubr	"st0", stck		// 2 bytes
+1101110011100		fsubr	stck, "st0"		// 2 bytes
+1101110111010		fst	stck			// 2 bytes, copy st(0) to st(i), st(i) defined by whatever is in stck
+1101110111011		fstp	stck			// 2 bytes, copy st(0) to st(i), and pop the register stack
+
+1101111011001		fmulp	stck			// 2 bytes
+1101111011100		fsubrp	stck, "st0"		// 2 bytes
+1101111011100001	fsubrp				// 2 bytes
+
+
+//1101111011		faddp	stck, stck		// 2 bytes, operands swapped in machine code
+1101111100011		fistp	memf
+
+1101111111100000	fstsw				// 2 bytes
+
+
+#examples
+
+11011001000111101011101100000001  fstp [y]
+11011001000001101011101100000001  fld	[y] 
+
+11011111000111101011111100000001  fistp	[i]
+
+11011000001001101011001100000001  fsub	[y_step]
+
+11011000000001101011101100000001  fadd	[y]
