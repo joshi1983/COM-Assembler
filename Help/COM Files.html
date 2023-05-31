@@ -1,16 +1,23 @@
-<HTML>
-<HEAD>
-<TITLE>COM Files</TITLE>
-</HEAD>
-<BODY>
-<h2>COM Files</a></h2>
-<dd>COM is a very simple format for storing programs.
-<dd>There is no header section to the files.  It is purely binary(machine code) data.
-<dd>They use the flat memory model.  This means the file is loaded into 1 location in ram.  It is not split into different segments.
-<dd>A 32kb section of ram is allocated for the program.  The first 256 bytes of the 32kb section is used by MS DOS so the first byte from the program is loaded into CS:0100h.  When the program starts, the processor jumps to that byte, CS:0100h.
-<dd>To set the origin of the program's address, you can use "org".  For example, if you wanted to set it to 100h, you could put on a line, "org 100h" or ".org 100h" or ".stack 100h".  This is usually just 100h because as mentioned before, com programs usually start at byte 256 in the segment.
-<dd>You can return to DOS using the ret instrustion or interupts.
-<br><br>
-
-</BODY>
-</HTML>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>COM Files</title>
+	</head>
+	<body>
+		<h2>COM Files</h2>
+		<ul>
+			<li>COM is a very simple format for storing programs.</li>
+			<li>There is no header section to the files.  It is purely binary(machine code) data.</li>
+			<li>They use the flat memory model.  This means the file is loaded into 1 location in ram.
+			It is not split into different segments.</li>
+			<li>A 32kb section of ram is allocated for the program.
+			The first 256 bytes of the 32kb section is used by MS DOS so the first byte from the
+			program is loaded into CS:0100h.  When the program starts, the processor jumps to that byte, CS:0100h.</li>
+			<li>To set the origin of the program's address, you can use "org".
+			For example, if you wanted to set it to 100h, you could put on a line,
+			"org 100h" or ".org 100h" or ".stack 100h".  This is usually just 100h
+			because as mentioned before, com programs usually start at byte 256 in the segment.</li>
+			<li>You can return to DOS using the ret instrustion or interupts.</li>
+		</ul>
+	</body>
+</html>

@@ -1,50 +1,107 @@
-<HTML>
-<HEAD>
-<TITLE>Instruction Set Files</TITLE>
-</HEAD>
-<BODY>
-<H1>Instruction Set Files</H1>
-<H2>Overview</H2>
-<dd>For an explanation of some of the various instructions to use, click <a href="http://www.penguin.cz/~literakl/intel/intel.html">here</a>.
-<dd>The instruction sets are stored in text files.
-<dd>Storing the instruction sets in files like this allows people to use other instruction sets that may not be supported by other assemblers.  
-<dd>Instruction set files are used to store the data needed to assemble assembly code and disassemble machine code.  All the opcodes, registers and machine codes are defined in them.  There are a few things handled by the assembler itself though.
-<dd>Official references for Intel instruction sets are <a href="http://developer.intel.com/design/pentium/manuals/">here</a>.
-<br><br><br>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Instruction Set Files</title>
+		<link rel="stylesheet" type="text/css" href="./styles.css">
+	</head>
+	<body>
+		<h1>Instruction Set Files</h1>
+		<h2>Overview</h2>
+		<ul>
+			<li>For an explanation of some of the various instructions to use, click
+		<a href="http://www.penguin.cz/~literakl/intel/intel.html">here</a>.</li>
+			<li>The instruction sets are stored in text files.</li>
+			<li>Storing the instruction sets in files like this allows people to use other instruction sets that may
+			not be supported by other assemblers.</li>
+			<li>Instruction set files are used to store the data needed to assemble assembly code
+			and disassemble machine code.  All the opcodes, registers and machine codes are defined in them.
+			There are a few things handled by the assembler itself though.</li>
+			<li>Official references for Intel instruction sets are
+			<a href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html">here</a>.
+			</li>
+		</ul>
 
-<H2>What is not included in the instruction set files</H2>
-<ul>
-<li><a href="Memory References.html"><b>Memory references</b></a> are handled by the assembler.  With the instruction set files, you can use mem, mem8, mem16, mem32, mem64, mem80 when you are writing out the machine code for an instruction that uses a memory reference.  The highest 3 bits define the type of reference.  There is also 2 bits for storing a memory addressing mode.  Use the mode directive explained lower on the page to specify where the mode is defined and if any machine code is between it and the operands.</li>
-<li><b>Immediate values</b> are handled by the assembler.  You can use i8, i16, i32 when refering to them.  They are assembled and therefore disassembled in little endian format.  This means that the bytes are swapped.  The highest order byte comes in the last byte of the machine code.</li>
-<li><b>Data definitions</b> are handled by the assembler.  The code can use db, and dw to define data.</li>
-</ul>
-<br>
-<H2>What is included in the instruction set files</H2>
-<ul>
-<li><b>Registers</b> are defined with their names and the binary codes used to represent them in machine code.  Since instructions may be used with several different registers, they can be grouped together.  For example reg8 is a group of the registers al, bl, cl, dl, ah, bh, ch, dh.  This way, when you write the machine code out for something that uses an 8-bit register, the assembler will find which of those registers are a match and use the machine code for it.</li>
-<li><b>Opcodes</b> are defined with their names and the binary codes used to represent them in machine code along with the types of operands used.  Also, several directives are listed below that give you more control over how the assembly statements are assembled and disassembled.</li>
+		<h2>What is not included in the instruction set files</h2>
+		<ul>
+			<li><a href="Memory%20References.html"><b>Memory references</b></a> are handled by the assembler.
+			With the instruction set files, you can use mem, mem8, mem16, mem32, mem64, mem80 when you
+			are writing out
+			the machine code for an instruction that uses a memory reference.  The highest 3 bits
+			define the type of reference.  There is also 2 bits for storing a memory addressing mode.
+			Use the mode directive explained lower on the page to specify where the mode is defined
+			and if any machine code is between it and the operands.</li>
+			<li><b>Immediate values</b> are handled by the assembler.  You can use i8, i16, i32
+			when refering to them.
+			They are assembled and therefore disassembled in little endian format.
+			This means that the bytes are swapped.
+			The highest order byte comes in the last byte of the machine code.</li>
+			<li><b>Data definitions</b> are handled by the assembler.
+			The code can use db, and dw to define data.</li>
+		</ul>
+		<h2>What is included in the instruction set files</h2>
+		<ul>
+			<li><b>Registers</b> are defined with their names and the binary codes used to represent
+			them in machine code.  Since instructions may be used with several different registers,
+			they can be grouped together.  For example reg8 is a group of the registers
+			al, bl, cl, dl, ah, bh, ch, dh.
+			This way, when you write the machine code out for something that uses an 8-bit register,
+			the assembler will find which of those registers are a match and use the machine code for it.</li>
+			<li><b>Opcodes</b> are defined with their names and the binary codes used to represent them
+			in machine code along with the types of operands used.  Also, several directives are listed below
+			that give you more control over how the assembly statements are assembled and disassembled.</li>
+		</ul>
+		<h2>Directives</h2>
+		These files can use several different loading directives including include, symbols, defines,
+		opcodes, and examples.
+		<ul>
+			<li>An <strong>include</strong> can be used to load another instruction set file.
+			There is only one file that is loaded automatically by the assembler.
+			The file is "instruction set.txt".
+			This file is used to link all the files together.
+			It includes the floating point(FPU) instruction set and the 8086 instruction set files.
+			Any file can include another instruction set.</li>
+			<li>A <strong>symbols</strong> section lets you define the binary values for each "symbol."
+			By symbol, I refer to registers and other operands with only 1 specific value.
+			For example: al, bl, cl, ah, cs, di...</li>
+			<li>A <strong>defines</strong> section lets you group symbols together.
+			For example, you may want to group 8 bit registers into a define called "reg8".
+			This is meant to be used in the opcodes to specify the types of operands.</li>
+			<li><strong>Examples</strong> let you show how the assembly statements would be represented in binary or whatever.
+			This section is not loaded.  It is strictly there for people that view the instruction set files.</li>
+			<li><strong>Colour</strong> lets you set a colour for the instructions defined in the file.
+			This makes it easier to visually group instructions when you view the instruction list in html using View -&gt; Opcode Listing from MyAssembler.
+			For example, floating point instructions are shown with a different colour from 8086 instructions.</li>
+		</ul>
+		<hr>
+		<strong>Single Instruction Directives</strong> (put in the line with the instruction)
+		<ul>
+			<li><strong>Prefix</strong> lets you state that an "opcode" in the instruction set file is
+			actually to be used as a prefix.
+			To define an "opcode" as actually being a prefix, type <span class="directive">'#prefix'</span>
+			somewhere in the line to the right of the binary for the instruction.
+			This means another assembly statement can be written just to the right of it.  Some examples
+			of prefixes are lock, rep, repe, repne, repz, repnz...
+			Later on, this should also specify the type of opcode used with the prefix.
+			This would be for prefixes like rep that are only to be used with string manipulation opcodes.</li>
+			<li><strong>Mode</strong> lets you show that the 2 bits for determining the memory addressing mode are
+			to be added just right of the opcode's machine code.  If there are any binary digits to
+			the right of the addressing mode and to the left of machine code for operands, add it on just
+			after the mode directive.  For example, <b>#mode+110</b>  Don't use any spaces in the directive.
+			Just put #mode, followed by a + sign and the binary digits you want used.</li>
+			<li><strong>DiasmOnly</strong> lets you define machine code for an instruction that will
+			only be used in the disassembling process.  This usually means, there is another more efficient
+			piece of machine code that can be used during the assembling process.</li>
+			<li><strong>RevMachOperand</strong> lets you reverse the machine code of the 2 operands.
+			The machine code for the first operand goes after the machine code of the operand on the right.</li>
+			<li><strong>Branch</strong> lets you specify an instruction as a branch instruction.
+			Examples of these are jumps and calls.
+			It is any instruction that changes the IP or EIP values.  This is used in the disassembling process.</li>
+			<li><strong>Processor</strong> lets you specify a processor/version for the instruction.
+			If you had an instruction that was first introduced in 80186 processors, you might specify that by typing
+			<span class="directive">'#processor=80186 '</span>
+			on the line with the instruction</li>
+		</ul>
 
-</ul>
-<br>
-<h2>Directives</h2>
-<ul>These files can use several different loading directives including include, symbols, defines, opcodes, and examples.   
-<li>An <strong>include</strong> can be used to load another instruction set file.  There is only one file that is loaded automatically by the assembler.  The file is "instruction set.txt".  This file is used to link all the files together.  It includes the floating point(FPU) instruction set and the 8086 instruction set files.  Any file can include another instruction set.
-<li>A <strong>symbols</strong> section lets you define the binary values for each "symbol."  By symbol, I refer to registers and other operands with only 1 specific value.  For example: al, bl, cl, ah, cs, di...
-<li>A <strong>defines</strong> section lets you group symbols together.  For example, you may want to group 8 bit registers into a define called "reg8".  This is meant to be used in the opcodes to specify the types of operands.
-<li><strong>Examples</strong> let you show how the assembly statements would be represented in binary or whatever.  This section is not loaded.  It is strictly there for people that view the instruction set files.
-<li><strong>Colour</strong> lets you set a colour for the instructions defined in the file.  This makes it easier to visually group instructions when you view the instruction list in html using View -> Opcode Listing from MyAssembler.  For example, floating point instructions are shown with a different colour from 8086 instructions.
-</ul>
-<hr>
-<STRONG>Single Instruction Directives</STRONG> (put in the line with the instruction)
-<ul>
-<li><strong>Prefix</strong> lets you state that an "opcode" in the instruction set file is actually to be used as a prefix.  To define an "opcode" as actually being a prefix, type <font color="green">'#prefix'</font> somewhere in the line to the right of the binary for the instruction.  This means another assembly statement can be written just to the right of it.  Some examples of prefixes are lock, rep, repe, repne, repz, repnz...  Later on, this should also specify the type of opcode used with the prefix.  This would be for prefixes like rep that are only to be used with string manipulation opcodes. 
-<li><strong>Mode</strong> lets you show that the 2 bits for determining the memory addressing mode are to be added just right of the opcode's machine code.  If there are any binary digits to the right of the addressing mode and to the left of machine code for operands, add it on just after the mode directive.  For example, <b>#mode+110</b>  Don't use any spaces in the directive.  Just put #mode, followed by a + sign and the binary digits you want used.
-<li><strong>DiasmOnly</strong> lets you define machine code for an instruction that will only be used in the disassembling process.  This usually means, there is another more efficient piece of machine code that can be used during the assembling process.
-<li><strong>RevMachOperand</strong> lets you reverse the machine code of the 2 operands.  The machine code for the first operand goes after the machine code of the operand on the right. 
-<li><strong>Branch</strong> lets you specify an instruction as a branch instruction.  Examples of these are jumps and calls.  It is any instruction that changes the IP or EIP values.  This is used in the disassembling process.
-<li><strong>Processor</strong> lets you specify a processor/version for the instruction.  If you had an instruction that was first introduced in 80186 processors, you might specify that by typing <font color="green">'#processor=80186 '</font> on the line with the instruction
-</ul>
+	</body>
 
-</BODY>
-
-</HTML>
+</html>

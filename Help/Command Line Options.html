@@ -1,25 +1,34 @@
-<HTML>
-<HEAD>
-<TITLE>Command Line Options</TITLE>
-</HEAD>
-<BODY>
-<H1>Command Line Options</H1>
-<h2>Overview</h2>
-<dd>If you want to use another code editor or assemble code from your own programs, you can create a batch file that contains DOS commands that can tell the assembler what to do.
-<dd><strong>Caution</strong> - watch out for using spaces in your file names.  They parse the parameters.  I suggest using the underscore, '_', character instead.
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Command Line Options</title>
+		<link rel="stylesheet" type="text/css" href="./styles.css">
+	</head>
+	<body>
+		<h1>Command Line Options</h1>
+		<h2>Overview</h2>
+		<p>If you want to use another code editor or assemble code from your own programs, you can create a batch file that contains DOS commands that can tell the assembler what to do.</p>
+		<p><strong>Caution</strong> - watch out for using spaces in your file names.  They parse the parameters.  I suggest using the underscore, '_', character instead.</p>
 
-<br>
-<H2>Options</H2>
-<ul>
-<li><strong>Assembly Process Document</strong> - You can set an option to create a text file that contains information on how the source file was assembled using the <font color="red"><b>makeprocdoc</b></font> command.</li>
-<li><strong>Error List Files</strong> - To set the file for outputting the error list, use the <font color="red"><b>-e</b></font> command.  Follow this by the name of your text file.</li>
-<li><strong>Load File</strong> - Load a file into the GUI using the <font color="red"><b>-l</b></font> command.  The following extentions will work: *.com; *.exe; *.txt; *.asm; *.inc</li>
-<li><strong>No Close</strong> - if you specify the output file, the program will usually close just after creating the output files.  If you want the assembler to stay running, use the <font color="red"><b>noclose</b></font> command.</li>
-<li><strong>Output</strong> - Specify the output program file using <font color="red"><b>-o</b></font> or just by giving the com program's name.  If you use the -e command, put the name of the program after it.</li>
-<li><strong>Source</strong> - Specify the source assembly file using <font color="red"><b>-s</b></font> or just by listing the assembly source file.  This is to be followed by the name of your source file.</li>
-
-</ul>
-
-</BODY>
-
-</HTML>
+		<h2>Options</h2>
+		<ul>
+			<li><strong>Assembly Process Document</strong> - You can set an option to create a text file
+			that contains information on how the source file was assembled using the
+			<span class="command-line-argument">makeprocdoc</span> command.</li>
+			<li><strong>Error List Files</strong> - To set the file for outputting the error list, use the
+			<span class="command-line-argument">-e</span> command.  Follow this by the name of your text file.
+			</li>
+			<li><strong>Load File</strong> - Load a file into the GUI using the <span class="command-line-argument">-l</span> command.
+			The following extentions will work: *.com; *.exe; *.txt; *.asm; *.inc</li>
+			<li><strong>No Close</strong> - if you specify the output file, the program will usually close just after
+			creating the output files.  If you want the assembler to stay running, use the
+			<span class="command-line-argument">noclose</span> command.</li>
+			<li><strong>Output</strong> - Specify the output program file using <span class="command-line-argument">-o</span>
+			or just by giving the com program's name.  If you use the -e command, put the name of the program after it.
+			</li>
+			<li><strong>Source</strong> - Specify the source assembly file using <span class="command-line-argument">-s</span>
+			or just by listing the assembly source file.  This is to be followed by the name of your source file.
+			</li>
+		</ul>
+	</body>
+</html>

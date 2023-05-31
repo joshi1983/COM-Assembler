@@ -1,0 +1,59 @@
+.assembly-label {
+	color: maroon;
+}
+
+.bordered-cells, .bordered-cells td {
+	border: 1px solid black;
+}
+
+.bordered-cells td {
+	padding: 5px;
+}
+
+.command-line-argument {
+	font-weight: bold;
+	color: red;
+}
+
+.comment {
+	color: purple;
+	font-style: italic;
+}
+
+.directive {
+	color: green;
+}
+
+.grammar-keyword {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.indented-grammar-section {
+	padding-left: 40px;
+	padding-bottom: 20px;
+}
+
+.mode {
+	font-weight: bold;
+	text-align: center;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.register-name {
+	color: navy;
+}
+
+.segment-register {
+	color: gray;
+}
+
+.string-literal,
+.number-literal {
+	color: #004000;
+}
+
+.variable-name-reference {
+	color: red;
+}
